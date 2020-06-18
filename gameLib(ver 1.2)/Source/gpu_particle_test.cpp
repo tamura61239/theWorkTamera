@@ -28,12 +28,35 @@ GpuParticleTest::GpuParticleTest(ID3D11Device* device):maxParticle(0)
 	for (int i = 0;i < 30000;i++)
 	{
 		Vertex vertex;
-		vertex.position.x = static_cast<float>(rand()%201-100) * 0.1;
-		vertex.position.y = static_cast<float>(rand()%201-100) * 0.1;
-		vertex.position.z = static_cast<float>(rand()%201-100) * 0.1;
+		vertex.position.x = static_cast<float>(rand()%20001-10000) * 0.001f;
+		vertex.position.y = static_cast<float>(rand()%20001-10000) * 0.001f;
+		vertex.position.z = static_cast<float>(rand()%20001-10000) * 0.001f;
 		vertex.position.w = 1.f;
 		DirectX::XMStoreFloat3(&vertex.velocity, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&VECTOR3F(vertex.position.x, vertex.position.y, vertex.position.z))));
-		vertex.velocity *= 0.1f;
+		float vec =1;
+		//if(vertex.velocity.x>0)vec.x = 1 / vertex.velocity.x;
+		//else vec.x = -1 / vertex.velocity.x;
+		//if (vertex.velocity.y > 0)vec.y = 1 / vertex.velocity.y;
+		//else vec.y = -1 / vertex.velocity.y;
+		//if (vertex.velocity.z > 0)vec.z = 1 / vertex.velocity.z;
+		//else vec.z = -1 / vertex.velocity.z;
+		//if (vertex.velocity.x * vertex.velocity.x >= vertex.velocity.y* vertex.velocity.y&& vertex.velocity.x* vertex.velocity.x >= vertex.velocity.z* vertex.velocity.z)
+		//{
+		//	if (vertex.velocity.x > 0)vec = 1 / vertex.velocity.x;
+		//	else vec = -1 / vertex.velocity.x;
+		//}
+		//else if (vertex.velocity.y * vertex.velocity.y >= vertex.velocity.x* vertex.velocity.x&& vertex.velocity.y* vertex.velocity.y >= vertex.velocity.z* vertex.velocity.z)
+		//{
+		//	if (vertex.velocity.y > 0)vec = 1 / vertex.velocity.y;
+		//	else vec = -1 / vertex.velocity.y;
+		//}
+		//else if (vertex.velocity.z * vertex.velocity.z >= vertex.velocity.y* vertex.velocity.y&& vertex.velocity.z* vertex.velocity.z >= vertex.velocity.x* vertex.velocity.x)
+		//{
+		//	if (vertex.velocity.z > 0)vec = 1 / vertex.velocity.z;
+		//	else vec = -1 / vertex.velocity.z;
+		//}
+		vertex.velocity *= 0.1f*vec;
+		//vertex.position = VECTOR4F(0, 0, 0, 1);
 		vertex.color = VECTOR4F(1, 1, 1, 1);
 		verticis.push_back(vertex);
 	}
