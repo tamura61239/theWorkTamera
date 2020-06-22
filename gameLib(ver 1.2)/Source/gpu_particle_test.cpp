@@ -5,93 +5,17 @@
 #include"shader.h"
 
 
-GpuParticleTest::GpuParticleTest(ID3D11Device* device):maxParticle(0)
+GpuParticleTest::GpuParticleTest(ID3D11Device* device) :mMaxParticle(0)
 {
-	std::vector<Vertex>verticis;
-	std::random_device rnd;     // 非決定的な乱数生成器を生成
-	std::mt19937 mt(rnd());     //  メルセンヌ・ツイスタの32ビット版、引数は初期シード値
-	std::uniform_int_distribution<> rand100(-100, 100);
+	mObj = std::make_unique<Obj3D>();
+	mObj->CalculateTransform();
 	HRESULT hr = S_OK;
 
-	hr = create_cs_from_cso(device, "Data/shader/compute_test.cso", mCSShader.GetAddressOf());
-	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-	D3D11_INPUT_ELEMENT_DESC inputElementDesc[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "VELOCITY", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-	hr = create_vs_from_cso(device, "Data/shader/gpu_particle_test_render_vs.cso", mVSShader.GetAddressOf(), mInput.GetAddressOf(), inputElementDesc, ARRAYSIZE(inputElementDesc));
-	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-	hr = create_ps_from_cso(device, "Data/shader/gpu_particle_test_render_ps.cso", mPSShader.GetAddressOf());
-	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-	for (int i = 0;i < 30000;i++)
-	{
-		Vertex vertex;
-		vertex.position.x = static_cast<float>(rand()%20001-10000) * 0.001f;
-		vertex.position.y = static_cast<float>(rand()%20001-10000) * 0.001f;
-		vertex.position.z = static_cast<float>(rand()%20001-10000) * 0.001f;
-		vertex.position.w = 1.f;
-		DirectX::XMStoreFloat3(&vertex.velocity, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&VECTOR3F(vertex.position.x, vertex.position.y, vertex.position.z))));
-		float vec =1;
-		//if(vertex.velocity.x>0)vec.x = 1 / vertex.velocity.x;
-		//else vec.x = -1 / vertex.velocity.x;
-		//if (vertex.velocity.y > 0)vec.y = 1 / vertex.velocity.y;
-		//else vec.y = -1 / vertex.velocity.y;
-		//if (vertex.velocity.z > 0)vec.z = 1 / vertex.velocity.z;
-		//else vec.z = -1 / vertex.velocity.z;
-		//if (vertex.velocity.x * vertex.velocity.x >= vertex.velocity.y* vertex.velocity.y&& vertex.velocity.x* vertex.velocity.x >= vertex.velocity.z* vertex.velocity.z)
-		//{
-		//	if (vertex.velocity.x > 0)vec = 1 / vertex.velocity.x;
-		//	else vec = -1 / vertex.velocity.x;
-		//}
-		//else if (vertex.velocity.y * vertex.velocity.y >= vertex.velocity.x* vertex.velocity.x&& vertex.velocity.y* vertex.velocity.y >= vertex.velocity.z* vertex.velocity.z)
-		//{
-		//	if (vertex.velocity.y > 0)vec = 1 / vertex.velocity.y;
-		//	else vec = -1 / vertex.velocity.y;
-		//}
-		//else if (vertex.velocity.z * vertex.velocity.z >= vertex.velocity.y* vertex.velocity.y&& vertex.velocity.z* vertex.velocity.z >= vertex.velocity.x* vertex.velocity.x)
-		//{
-		//	if (vertex.velocity.z > 0)vec = 1 / vertex.velocity.z;
-		//	else vec = -1 / vertex.velocity.z;
-		//}
-		vertex.velocity *= 0.1f*vec;
-		//vertex.position = VECTOR4F(0, 0, 0, 1);
-		vertex.color = VECTOR4F(1, 1, 1, 1);
-		verticis.push_back(vertex);
-	}
-	maxParticle = verticis.size();
-	{
-		D3D11_BUFFER_DESC desc;
-		ZeroMemory(&desc, sizeof(desc));
-		desc.ByteWidth = sizeof(Vertex) * verticis.size();
-		desc.BindFlags = D3D11_BIND_VERTEX_BUFFER | D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
-		desc.Usage = D3D11_USAGE_DEFAULT;
-		desc.CPUAccessFlags = 0;
-		desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS;
-		D3D11_SUBRESOURCE_DATA subeData = {};
-		subeData.pSysMem = &verticis[0];
-		hr = device->CreateBuffer(&desc, &subeData, mVertexBuffer.GetAddressOf());
-		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
-	}
-	{
-		//Viewを作成する
-		D3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc;
-		ZeroMemory(&uavDesc, sizeof(uavDesc));
-		uavDesc.Format = DXGI_FORMAT_R32_TYPELESS;
-		uavDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
-		uavDesc.Buffer.FirstElement = 0;
-		uavDesc.Buffer.NumElements = sizeof(Vertex) * verticis.size() / 4;
-		uavDesc.Buffer.Flags = D3D11_BUFFER_UAV_FLAG_RAW;
-		hr = device->CreateUnorderedAccessView(mVertexBuffer.Get(), &uavDesc, mUAV.GetAddressOf());
-		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-	}
 	// create rasterizer state : solid mode
 	{
 		D3D11_RASTERIZER_DESC rasterizerDesc = {};
 		rasterizerDesc.FillMode = D3D11_FILL_SOLID; //D3D11_FILL_WIREFRAME, D3D11_FILL_SOLID
-		rasterizerDesc.CullMode = D3D11_CULL_NONE; //D3D11_CULL_NONE, D3D11_CULL_FRONT, D3D11_CULL_BACK   
+		rasterizerDesc.CullMode = D3D11_CULL_BACK; //D3D11_CULL_NONE, D3D11_CULL_FRONT, D3D11_CULL_BACK   
 		rasterizerDesc.FrontCounterClockwise = FALSE;
 		rasterizerDesc.DepthBias = 0;
 		rasterizerDesc.DepthBiasClamp = 0;
@@ -170,13 +94,14 @@ GpuParticleTest::GpuParticleTest(ID3D11Device* device):maxParticle(0)
 
 void GpuParticleTest::Update(ID3D11DeviceContext* context)
 {
+	if (!mCSShader)return;
 	ID3D11UnorderedAccessView* uavs[] = { mUAV.Get() };
 	ID3D11ComputeShader* compute = mCSShader.Get();
 	context->CSSetUnorderedAccessViews(0, ARRAYSIZE(uavs), uavs, nullptr);
 	context->CSSetShader(compute, nullptr, 0);
 
 	//実行
-	context->Dispatch(maxParticle / 100, 1, 1);
+	context->Dispatch(mMaxParticle / 100, 1, 1);
 
 	uavs[0] = nullptr;
 	context->CSSetUnorderedAccessViews(0, ARRAYSIZE(uavs), uavs, nullptr);
@@ -202,10 +127,13 @@ void GpuParticleTest::Render(ID3D11DeviceContext* context, const FLOAT4X4& view,
 	cbScene.view = view;
 	cbScene.projection = projection;
 	context->UpdateSubresource(mCbSceneBuffer.Get(), 0, 0, &cbScene, 0, 0);
+	CbObj cbObj;
+	cbObj.world = mObj->GetWorld();
+	context->UpdateSubresource(mCbObjBuffer.Get(), 0, 0, &cbObj, 0, 0);
 	context->VSSetShader(mVSShader.Get(), nullptr, 0);
 	context->PSSetShader(mPSShader.Get(), nullptr, 0);
 	context->IASetInputLayout(mInput.Get());
-	
+
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 	ID3D11Buffer* vbs[]
@@ -215,8 +143,9 @@ void GpuParticleTest::Render(ID3D11DeviceContext* context, const FLOAT4X4& view,
 	context->IASetVertexBuffers(0, ARRAYSIZE(vbs), vbs, &stride, &offset);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 	context->PSSetShaderResources(0, 0, nullptr);
-	context->Draw(maxParticle, 0);
+	context->Draw(mMaxParticle, 0);
 	vbs[0] = nullptr;
 	context->IASetVertexBuffers(0, ARRAYSIZE(vbs), vbs, &stride, &offset);
 
 }
+

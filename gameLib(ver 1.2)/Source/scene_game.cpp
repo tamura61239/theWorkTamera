@@ -6,6 +6,9 @@
 #include"camera_manager.h"
 #include"gamepad.h"
 #include"light.h"
+#include"gpu_cube_particle.h"
+#include"gpu_sphere_particle.h"
+#include"gpu_2d_texture_particle.h"
 #ifdef USE_IMGUI
 #include <imgui.h>
 #include <imgui_impl_dx11.h>
@@ -27,7 +30,7 @@ SceneGame::SceneGame(ID3D11Device* device)
 			staticObjs.back()->SetPosition(VECTOR3F(0, 0, 0));
 			//staticObjs.back()->SetScale(VECTOR3F(0.1, 0.1, 0.1));
 			staticObjs.back()->CalculateTransform();
-			staticObjs.push_back(std::make_unique<StaticObj>(device, "Data/FBX/Stage/stage01.fbx", SHADER_TYPE::USEALLY));
+			staticObjs.push_back(std::make_unique<StaticObj>(device, "Data/FBX/floor01/floor01.fbx", SHADER_TYPE::USEALLY));
 			staticObjs.back()->SetPosition(VECTOR3F(0, -10, 0));
 			//staticObjs.back()->SetScale(VECTOR3F(20, 20, 20));
 			staticObjs.back()->CalculateTransform();
@@ -44,11 +47,12 @@ SceneGame::SceneGame(ID3D11Device* device)
 
 			modelRenderer = std::make_unique<ModelRenderer>(device);
 			bloom = std::make_unique<Bloom>(device, 1920, 1080);
-			testGpuParticle = std::make_unique<GpuParticleTest>(device);
+			testGpuParticle = std::make_unique<Gpu2DTextureParticle>(device);
 		}, device);
 	test = std::make_unique<Sprite>(device, L"Data/image/ゲームテスト.png");
 	nowLoading = std::make_unique<Sprite>(device, L"Data/image/wp-thumb.jpg");
 	blend[0] = std::make_unique<blend_state>(device, BLEND_MODE::ALPHA);
+	blend[1] = std::make_unique<blend_state>(device, BLEND_MODE::ADD);
 	pCamera.CreateCamera();
 	pCamera.GetCamera()->SetEye(VECTOR3F(100, 40, -200));
 	pSoundManager.Play(0, true);
@@ -161,34 +165,37 @@ void SceneGame::Render(ID3D11DeviceContext* context, float elapsed_time)
 
 	//test->Render(context, VECTOR2F(0, 0), VECTOR2F(222, 96), VECTOR2F(0, 0), VECTOR2F(111, 48), 0);
 	//const VECTOR4F light = VECTOR4F(0, -0.5f, -1, 0);
-	//FLOAT4X4 view = pCamera.GetCamera()->GetView();
-	//FLOAT4X4 projection = pCamera.GetCamera()->GetProjection();
-	//FLOAT4X4 viewProjection;
+	FLOAT4X4 view = pCamera.GetCamera()->GetView();
+	FLOAT4X4 projection = pCamera.GetCamera()->GetProjection();
+	FLOAT4X4 viewProjection;
 
-	//DirectX::XMStoreFloat4x4(&viewProjection, DirectX::XMLoadFloat4x4(&view) * DirectX::XMLoadFloat4x4(&projection));
+	DirectX::XMStoreFloat4x4(&viewProjection, DirectX::XMLoadFloat4x4(&view) * DirectX::XMLoadFloat4x4(&projection));
 
 	///************************カラーマップテクスチャの作成***********************/
 	//frameBuffer[0]->Clear(context);
 	//frameBuffer[0]->Activate(context);
-	//pLight.ConstanceLightBufferSetShader(context);
+	pLight.ConstanceLightBufferSetShader(context);
 
 	//modelRenderer->Begin(context, viewProjection, pLight.GetLightDirection());
 	//modelRenderer->Draw(context, *player->GetCharacter()->GetModel());
 	//modelRenderer->End(context);
+	blend[0]->activate(context);
 	//meshRender->Begin(context, pLight.GetLightDirection(), view, projection);
-	//blend[0]->activate(context);
-	//for (auto& obj : staticObjs)
-	//{
-	//	meshRender->Render(context, obj->GetMesh(), obj->GetWorld());
-	//}
-	//blend[0]->deactivate(context);
+	////for (auto& obj : staticObjs)
+	////{
+	////	meshRender->Render(context, obj->GetMesh(), obj->GetWorld());
+	////}
+	//meshRender->Render(context, staticObjs[1]->GetMesh(), staticObjs[1]->GetWorld(),VECTOR4F(0.1,0.1,0.1,1));
 	//meshRender->End(context);
+	//blend[0]->deactivate(context);
+	//blend[1]->activate(context);
+	testGpuParticle->Render(context, pCamera.GetCamera()->GetView(), pCamera.GetCamera()->GetProjection());
+	blend[0]->deactivate(context);
 	//frameBuffer[0]->Deactivate(context);
 
 	///****************影をつける******************/
 	//renderEffects->ShadowRender(context, frameBuffer[0]->GetRenderTargetShaderResourceView().Get(), frameBuffer[0]->GetDepthStencilShaderResourceView().Get(), shadowMap->GetDepthStencilShaderResourceView().Get(), view, projection, lightCamera.GetView(), lightCamera.GetProjection());
-	////bloom->Render(context, frameBuffer[0]->GetRenderTargetShaderResourceView().Get(), true);
-	testGpuParticle->Render(context, pCamera.GetCamera()->GetView(), pCamera.GetCamera()->GetProjection());
+	//bloom->Render(context, frameBuffer[0]->GetRenderTargetShaderResourceView().Get(), true);
 }
 
 SceneGame::~SceneGame()

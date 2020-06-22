@@ -1,14 +1,16 @@
 #pragma once
-#include"vector.h"
 #include<d3d11.h>
 #include<wrl.h>
+#include"obj3d.h"
+#include<memory>
 
 class GpuParticleTest
 {
 public:
 	GpuParticleTest(ID3D11Device* device);
-	void Update(ID3D11DeviceContext* context);
-	void Render(ID3D11DeviceContext* context, const FLOAT4X4& view, const FLOAT4X4& projection);
+	virtual void Update(ID3D11DeviceContext* context);
+	virtual Obj3D* GetObj() { return mObj.get(); }
+	virtual void Render(ID3D11DeviceContext* context, const FLOAT4X4& view, const FLOAT4X4& projection);
 	struct Vertex
 	{
 		VECTOR4F position;
@@ -24,7 +26,8 @@ public:
 	{
 		FLOAT4X4 world;
 	};
-private:
+protected:
+	std::unique_ptr<Obj3D>mObj;
 	Microsoft::WRL::ComPtr<ID3D11Buffer>mCoputeBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer>mVertexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer>mCbSceneBuffer;
@@ -43,5 +46,5 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState>mDepthStencilState;
 	Microsoft::WRL::ComPtr<ID3D11SamplerState>mSamplerState;
 
-	float maxParticle;
+	float mMaxParticle;
 };
