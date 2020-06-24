@@ -1,18 +1,20 @@
-#include "gpu_swirl_particle.h"
-#include<vector>
+#include "gpu_absorption_particle.h"
 #include<random>
+#include<vector>
 #include "misc.h"
 #include"shader.h"
 
-GpuSwirlParticle::GpuSwirlParticle(ID3D11Device* device, int maxParticle) :GpuParticleTest(device)
+
+GpuAbsorptionParticle::GpuAbsorptionParticle(ID3D11Device* device, int maxParticle, int size, VECTOR3F center):GpuParticleTest(device)
 {
 	std::random_device rnd;     // 非決定的な乱数生成器を生成
 	std::mt19937 mt(rnd());     //  メルセンヌ・ツイスタの32ビット版、引数は初期シード値
 	std::uniform_int_distribution<> rand100(0, 10000);
 	std::uniform_int_distribution<> rand2(0, 20000);
+	std::uniform_int_distribution<> randAngle(0, 6280000);
 
 	HRESULT hr = S_OK;
-	hr = create_cs_from_cso(device, "Data/shader/swirl_particle_compute.cso", mCSShader.GetAddressOf());
+	hr = create_cs_from_cso(device, "Data/shader/absorpartion_particle_compute.cso", mCSShader.GetAddressOf());
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	D3D11_INPUT_ELEMENT_DESC inputElementDesc[] =
 	{
@@ -24,57 +26,27 @@ GpuSwirlParticle::GpuSwirlParticle(ID3D11Device* device, int maxParticle) :GpuPa
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	hr = create_ps_from_cso(device, "Data/shader/gpu_particle_test_render_ps.cso", mPSShader.GetAddressOf());
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
 	std::vector<Vertex>vertices;
+	std::vector<Vertex>resetVertices;
 	for (int i = 0;i < maxParticle;i++)
 	{
 		Vertex vertex;
 		vertex.position = VECTOR4F(0, 0, 0, 1);
-		float length = static_cast<float>(rand100(mt)) * 0.0001f;
-		int type = rand() % 4;
-		if (type <= 1)type = 0;
-		else type = 1;
-		int a = length / 0.4f * 60;
-		float angle = DirectX::XMConvertToRadians(static_cast<float>(a) + 180 * static_cast<float>(type));
-
-		vertex.position.x += sinf(angle) * 10.0f * length + sinf(angle + DirectX::XMConvertToRadians(90.0f)) * (rand2(mt) - 10000) * 0.0001f * length * 3.f;
-		vertex.position.y = (rand2(mt) - 10000) * (rand100(mt)) * 0.00000001f * length;
-		vertex.position.z += cosf(angle) * 10.0f * length + cosf(angle + DirectX::XMConvertToRadians(90.0f)) * (rand2(mt) - 10000) * 0.0001f * length * 3.f;
-
-		vertex.color = VECTOR4F(1, 1, 1, 1);
-		if (length > 0.4f)
-		{
-			vertex.color.w = 1.f - (length - 0.4f) / 0.6f;
-		}
 		vertex.velocity = VECTOR3F(0, 0, 0);
+		vertex.color = VECTOR4F(1, 1, 1, 1);
+		float length = static_cast<float>(rand100(mt)) * 0.0001f;
+		length *= size;
+		float angle = static_cast<float>(randAngle(mt)) * 0.000001f;
+		vertex.position.x = sinf(angle) * length;
+		vertex.position.z = cosf(angle) * length;
 		vertices.push_back(vertex);
+		vertex.position.x = sinf(angle) * size;
+		vertex.position.z = cosf(angle) * size;
+		resetVertices.push_back(vertex);
 	}
 	mMaxParticle = vertices.size();
-	std::vector<Vertex>resetVritices;
-	for (auto&vec:vertices)
-	{
-		Vertex vertex;
-		vertex.position = VECTOR4F(0, 0, 0, 1);
-
-		float length = 10000 * 0.0001f;
-		int type = rand() % 4;
-		if (type <= 1)type = 0;
-		else type = 1;
-		int a = length / 0.4f * 60;
-		float angle = DirectX::XMConvertToRadians(static_cast<float>(a) + 180 * static_cast<float>(type));
-
-		vertex.position.x += sinf(angle) * 10.0f * length + sinf(angle + DirectX::XMConvertToRadians(90.0f)) * (rand2(mt) - 10000) * 0.0001f * length * 3.f;
-		vertex.position.y = (rand2(mt) - 10000) * (rand100(mt)) * 0.00000001f * length;
-		vertex.position.z += cosf(angle) * 10.0f * length + cosf(angle + DirectX::XMConvertToRadians(90.0f)) * (rand2(mt) - 10000) * 0.0001f * length * 3.f;
-
-		vertex.color = VECTOR4F(1, 1, 1, 1);
-		//if (length > 0.4f)
-		//{
-		//	vertex.color.w = 1.f - (length - 0.4f) / 0.6f;
-		//}
-		vertex.velocity = VECTOR3F(0, 0, 0);
-		resetVritices.push_back(vertex);
-
-	}
+	//バッファ&view生成
 	{
 		D3D11_BUFFER_DESC desc;
 		ZeroMemory(&desc, sizeof(desc));
@@ -88,7 +60,7 @@ GpuSwirlParticle::GpuSwirlParticle(ID3D11Device* device, int maxParticle) :GpuPa
 		hr = device->CreateBuffer(&desc, &subeData, mVertexBuffer.GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		//desc.BindFlags = D3D11_BIND_VERTEX_BUFFER | D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
-		subeData.pSysMem = &resetVritices[0];
+		subeData.pSysMem = &resetVertices[0];
 		hr = device->CreateBuffer(&desc, &subeData, mResetBuffer.GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
@@ -110,6 +82,7 @@ GpuSwirlParticle::GpuSwirlParticle(ID3D11Device* device, int maxParticle) :GpuPa
 
 	}
 	mComputeConstance.centerPosition = VECTOR3F(0, 0, 0);
+	mComputeConstance.dummy = static_cast<float>(size);
 	// create constant buffer
 	{
 		D3D11_BUFFER_DESC bufferDesc = {};
@@ -125,44 +98,23 @@ GpuSwirlParticle::GpuSwirlParticle(ID3D11Device* device, int maxParticle) :GpuPa
 
 }
 
-void GpuSwirlParticle::Update(ID3D11DeviceContext* context)
+void GpuAbsorptionParticle::Update(ID3D11DeviceContext* context)
 {
 	if (!mCSShader)return;
-	std::random_device rnd;     // 非決定的な乱数生成器を生成
-	std::mt19937 mt(rnd());     //  メルセンヌ・ツイスタの32ビット版、引数は初期シード値
-	std::uniform_int_distribution<> rand100(0, 10000);
-	std::uniform_int_distribution<> rand2(0, 20000);
-	std::random_device rnd2;     // 非決定的な乱数生成器を生成
-	//std::mt19937 mt2(rnd2());     //  メルセンヌ・ツイスタの32ビット版、引数は初期シード値
-	//std::uniform_int_distribution<> rand3(0, 2000);
-	static float angle = 0;
-	angle += 0.01745f;
-	//mComputeConstance.;
-	//int type = rand3(mt2);
-	//if (type <= 1000)type = 1;
-	//else type = 0;
-	//mComputeConstance.type = static_cast<float>(type);
-	//mComputeConstance.x += sinf(angle) * 10.0f * length + sinf(angle + DirectX::XMConvertToRadians(90.0f)) * (rand2(mt) - 10000) * 0.0001f * length * 3.f;
-	//mComputeConstance.z += cosf(angle) * 10.0f * length + cosf(angle + DirectX::XMConvertToRadians(90.0f)) * (rand2(mt) - 10000) * 0.0001f * length * 3.f;
-	if (angle >= 3.14f)angle -= 3.14f;
-	ID3D11UnorderedAccessView* uavs[] = { mUAV.Get(),mResetUAV.Get() };
+	ID3D11UnorderedAccessView* uavs[] = { mUAV.Get() ,mResetUAV.Get()};
 	ID3D11ComputeShader* compute = mCSShader.Get();
 	context->CSSetUnorderedAccessViews(0, ARRAYSIZE(uavs), uavs, nullptr);
 	context->CSSetShader(compute, nullptr, 0);
 	context->CSSetConstantBuffers(1, 1, mConputeConstanceBuffer.GetAddressOf());
 	context->UpdateSubresource(mConputeConstanceBuffer.Get(), 0, 0, &mComputeConstance, 0, 0);
+
 	//実行
 	context->Dispatch(mMaxParticle / 100, 1, 1);
 
 	uavs[0] = nullptr;
-	uavs[1] = nullptr;
 	context->CSSetUnorderedAccessViews(0, ARRAYSIZE(uavs), uavs, nullptr);
 
 	compute = nullptr;
 	context->CSSetShader(compute, nullptr, 0);
 
 }
-
-//void GpuSwirlParticle::Render(ID3D11DeviceContext* context, const FLOAT4X4& view, const FLOAT4X4& projection)
-//{
-//}

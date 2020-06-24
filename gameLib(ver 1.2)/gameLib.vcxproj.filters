@@ -183,6 +183,9 @@
     <ClCompile Include="Source\gpu_swirl_particle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Source\gpu_absorption_particle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External_Libraries\imgui\imconfig.h">
@@ -359,6 +362,9 @@
     <ClInclude Include="Source\gpu_swirl_particle.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Source\gpu_absorption_particle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\board.hlsli">
@@ -493,6 +499,9 @@
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="Source\swirl_particle_compute.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\absorpartion_particle_compute.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
   </ItemGroup>

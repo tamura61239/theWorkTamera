@@ -14,7 +14,7 @@ private:
 		float dummy;
 	};
 	Microsoft::WRL::ComPtr<ID3D11Buffer>mConputeConstanceBuffer;
-	Microsoft::WRL::ComPtr<ID3D11Buffer>mResetVertex;
+	Microsoft::WRL::ComPtr<ID3D11Buffer>mResetBuffer;
 	Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView>mResetUAV;
 	ComputeConstance mComputeConstance;
 };

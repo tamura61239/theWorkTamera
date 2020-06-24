@@ -47,4 +47,5 @@ protected:
 	Microsoft::WRL::ComPtr<ID3D11SamplerState>mSamplerState;
 
 	float mMaxParticle;
+	UINT mVertexSize;
 };

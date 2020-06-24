@@ -5,7 +5,7 @@
 #include"shader.h"
 
 
-GpuParticleTest::GpuParticleTest(ID3D11Device* device) :mMaxParticle(0)
+GpuParticleTest::GpuParticleTest(ID3D11Device* device) :mMaxParticle(0),mVertexSize(sizeof(Vertex))
 {
 	mObj = std::make_unique<Obj3D>();
 	mObj->CalculateTransform();
@@ -134,7 +134,7 @@ void GpuParticleTest::Render(ID3D11DeviceContext* context, const FLOAT4X4& view,
 	context->PSSetShader(mPSShader.Get(), nullptr, 0);
 	context->IASetInputLayout(mInput.Get());
 
-	UINT stride = sizeof(Vertex);
+	UINT stride = mVertexSize;
 	UINT offset = 0;
 	ID3D11Buffer* vbs[]
 	{

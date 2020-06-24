@@ -10,6 +10,7 @@
 #include"gpu_sphere_particle.h"
 #include"gpu_2d_texture_particle.h"
 #include"gpu_swirl_particle.h"
+#include"gpu_absorption_particle.h"
 #ifdef USE_IMGUI
 #include <imgui.h>
 #include <imgui_impl_dx11.h>
@@ -48,7 +49,7 @@ SceneGame::SceneGame(ID3D11Device* device)
 
 			modelRenderer = std::make_unique<ModelRenderer>(device);
 			bloom = std::make_unique<Bloom>(device, 1920, 1080);
-			testGpuParticle = std::make_unique<GpuSwirlParticle>(device,500000);
+			testGpuParticle = std::make_unique<GpuAbsorptionParticle>(device,50000,100);
 		}, device);
 	test = std::make_unique<Sprite>(device, L"Data/image/ゲームテスト.png");
 	nowLoading = std::make_unique<Sprite>(device, L"Data/image/wp-thumb.jpg");

@@ -169,6 +169,7 @@
     <ClCompile Include="Source\gamepad.cpp" />
     <ClCompile Include="Source\geometric_primitive.cpp" />
     <ClCompile Include="Source\gpu_2d_texture_particle.cpp" />
+    <ClCompile Include="Source\gpu_absorption_particle.cpp" />
     <ClCompile Include="Source\gpu_cube_particle.cpp" />
     <ClCompile Include="Source\gpu_particle_test.cpp" />
     <ClCompile Include="Source\gpu_sphere_particle.cpp" />
@@ -221,6 +222,7 @@
     <ClInclude Include="Source\gamepad.h" />
     <ClInclude Include="Source\geometric_primitive.h" />
     <ClInclude Include="Source\gpu_2d_texture_particle.h" />
+    <ClInclude Include="Source\gpu_absorption_particle.h" />
     <ClInclude Include="Source\gpu_cube_particle.h" />
     <ClInclude Include="Source\gpu_particle_test.h" />
     <ClInclude Include="Source\gpu_sphere_particle.h" />
@@ -278,6 +280,19 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Source\2d_texture_particle_compute.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Data\shader\%(Filename).cso</ObjectFileOutput>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AssemblyCode</AssemblerOutput>
+      <AssemblerOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Data\shader\%(Filename).cod</AssemblerOutputFile>
+    </FxCompile>
+    <FxCompile Include="Source\absorpartion_particle_compute.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
