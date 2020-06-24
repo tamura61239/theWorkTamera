@@ -171,6 +171,18 @@
     <ClCompile Include="Source\gpu_particle_test.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Source\gpu_cube_particle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\gpu_sphere_particle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\gpu_2d_texture_particle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\gpu_swirl_particle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External_Libraries\imgui\imconfig.h">
@@ -335,6 +347,18 @@
     <ClInclude Include="Source\gpu_particle_test.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Source\gpu_cube_particle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\gpu_sphere_particle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\gpu_2d_texture_particle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\gpu_swirl_particle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\board.hlsli">
@@ -374,6 +398,9 @@
       <Filter>gameLib\Shaders</Filter>
     </None>
     <None Include="Source\gpu_particle_test_render.hlsli">
+      <Filter>シェーダー</Filter>
+    </None>
+    <None Include="Source\swirl.hlsli">
       <Filter>シェーダー</Filter>
     </None>
   </ItemGroup>
@@ -451,6 +478,21 @@
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="Source\gpu_particle_test_render_ps.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\sphere_particle_compute.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\gpu_particle_2d_test_render_vs.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\gpu_particle_2d_test_render_ps.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\2d_texture_particle_compute.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\swirl_particle_compute.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
   </ItemGroup>

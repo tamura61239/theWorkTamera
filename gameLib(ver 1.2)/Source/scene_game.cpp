@@ -9,6 +9,7 @@
 #include"gpu_cube_particle.h"
 #include"gpu_sphere_particle.h"
 #include"gpu_2d_texture_particle.h"
+#include"gpu_swirl_particle.h"
 #ifdef USE_IMGUI
 #include <imgui.h>
 #include <imgui_impl_dx11.h>
@@ -47,7 +48,7 @@ SceneGame::SceneGame(ID3D11Device* device)
 
 			modelRenderer = std::make_unique<ModelRenderer>(device);
 			bloom = std::make_unique<Bloom>(device, 1920, 1080);
-			testGpuParticle = std::make_unique<Gpu2DTextureParticle>(device);
+			testGpuParticle = std::make_unique<GpuSwirlParticle>(device,500000);
 		}, device);
 	test = std::make_unique<Sprite>(device, L"Data/image/ゲームテスト.png");
 	nowLoading = std::make_unique<Sprite>(device, L"Data/image/wp-thumb.jpg");
@@ -124,7 +125,7 @@ void SceneGame::Render(ID3D11DeviceContext* context, float elapsed_time)
 		}
 		loadTimer += elapsed_time;
 		blend[0]->activate(context);
-		nowLoading->Render(context, VECTOR2F(0, 0), VECTOR2F(viewport.Width, viewport.Height), VECTOR2F(0, 0), VECTOR2F(1200, 675), 0, color);
+		//nowLoading->Render(context, VECTOR2F(0, 0), VECTOR2F(viewport.Width, viewport.Height), VECTOR2F(0, 0), VECTOR2F(1200, 675), 0, color);
 		blend[0]->deactivate(context);
 
 		return;
@@ -172,30 +173,30 @@ void SceneGame::Render(ID3D11DeviceContext* context, float elapsed_time)
 	DirectX::XMStoreFloat4x4(&viewProjection, DirectX::XMLoadFloat4x4(&view) * DirectX::XMLoadFloat4x4(&projection));
 
 	///************************カラーマップテクスチャの作成***********************/
-	//frameBuffer[0]->Clear(context);
-	//frameBuffer[0]->Activate(context);
+	frameBuffer[0]->Clear(context);
+	frameBuffer[0]->Activate(context);
 	pLight.ConstanceLightBufferSetShader(context);
 
 	//modelRenderer->Begin(context, viewProjection, pLight.GetLightDirection());
 	//modelRenderer->Draw(context, *player->GetCharacter()->GetModel());
 	//modelRenderer->End(context);
 	blend[0]->activate(context);
-	//meshRender->Begin(context, pLight.GetLightDirection(), view, projection);
-	////for (auto& obj : staticObjs)
-	////{
-	////	meshRender->Render(context, obj->GetMesh(), obj->GetWorld());
-	////}
-	//meshRender->Render(context, staticObjs[1]->GetMesh(), staticObjs[1]->GetWorld(),VECTOR4F(0.1,0.1,0.1,1));
-	//meshRender->End(context);
+	meshRender->Begin(context, pLight.GetLightDirection(), view, projection);
+	//for (auto& obj : staticObjs)
+	//{
+	//	meshRender->Render(context, obj->GetMesh(), obj->GetWorld());
+	//}
+	meshRender->Render(context, staticObjs[1]->GetMesh(), staticObjs[1]->GetWorld(),VECTOR4F(0.1,0.1,0.1,1));
+	meshRender->End(context);
 	//blend[0]->deactivate(context);
 	//blend[1]->activate(context);
 	testGpuParticle->Render(context, pCamera.GetCamera()->GetView(), pCamera.GetCamera()->GetProjection());
 	blend[0]->deactivate(context);
-	//frameBuffer[0]->Deactivate(context);
+	frameBuffer[0]->Deactivate(context);
 
 	///****************影をつける******************/
 	//renderEffects->ShadowRender(context, frameBuffer[0]->GetRenderTargetShaderResourceView().Get(), frameBuffer[0]->GetDepthStencilShaderResourceView().Get(), shadowMap->GetDepthStencilShaderResourceView().Get(), view, projection, lightCamera.GetView(), lightCamera.GetProjection());
-	//bloom->Render(context, frameBuffer[0]->GetRenderTargetShaderResourceView().Get(), true);
+	bloom->Render(context, frameBuffer[0]->GetRenderTargetShaderResourceView().Get(), true);
 }
 
 SceneGame::~SceneGame()

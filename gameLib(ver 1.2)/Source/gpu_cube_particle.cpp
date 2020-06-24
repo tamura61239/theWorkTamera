@@ -33,7 +33,7 @@ GpuCubeParticle::GpuCubeParticle(ID3D11Device* device, const int maxParticle, co
 		vertex.position.w = 1.f;
 		DirectX::XMStoreFloat3(&vertex.velocity, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&VECTOR3F(vertex.position.x, vertex.position.y, vertex.position.z))));
 		vertex.velocity *= 0.1f;
-		vertex.color = VECTOR4F(1, 1, 1, 1);
+		vertex.color = VECTOR4F(1, 0.5f, 0, 1);
 		verticis.push_back(vertex);
 	}
 	mMaxParticle = verticis.size();

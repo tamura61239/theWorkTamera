@@ -28,9 +28,9 @@ void main( uint3 DTid : SV_DispatchThreadID )
 	//if (position.x > 10 || position.x < -10)position.x = velocity.x;
 	//if (position.y > 10 || position.y < -10)position.y = velocity.y;
 	//if (position.z > 10 || position.z < -10)position.z = velocity.z;
-	position.x = lerp(position.x, velocity.x, regionFlag.x);
-	position.y = lerp(position.y, velocity.y, regionFlag.y);
-	position.z = lerp(position.z, velocity.z, regionFlag.z);
+	position.x = lerp(position.x, 0, regionFlag.x);
+	position.y = lerp(position.y, 0, regionFlag.y);
+	position.z = lerp(position.z, 0, regionFlag.z);
 	rwbParticle.Store4(bufferIndex + 0, asuint(position));
 	rwbParticle.Store3(bufferIndex + 16, asuint(velocity));
 	rwbParticle.Store4(bufferIndex + 28, asuint(color));
