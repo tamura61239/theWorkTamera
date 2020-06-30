@@ -33,7 +33,7 @@ Gpu2DTextureParticle::Gpu2DTextureParticle(ID3D11Device* device, VECTOR2F size):
 			vertex.position = VECTOR4F((textureStart.x + x) * view.x, (textureStart.y + y) * view.y, 0, 1);
 			vertex.position.x = vertex.position.x * 2.f - 1.f;
 			vertex.position.y = vertex.position.y * 2.f - 1.f;
-			vertex.color = VECTOR4F(1, 1, 1, 1);
+			vertex.color = VECTOR4F(0,0,0,0);
 			//vertex.velocity = VECTOR3F(vertex.position.x, vertex.position.y, 0)*0.01f;
 			vertex.velocity = VECTOR3F(0, 0, 0);
 			vertices.push_back(vertex);

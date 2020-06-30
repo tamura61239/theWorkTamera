@@ -37,6 +37,15 @@
     <Filter Include="シェーダー">
       <UniqueIdentifier>{8c8ac49e-6b74-4bf0-b0ea-4aade901f9f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Gpu">
+      <UniqueIdentifier>{7540535b-b557-4d6e-9f81-14a1e94a54e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Gpu">
+      <UniqueIdentifier>{d5153abe-3a72-401e-91e1-f5a2fff48997}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="シェーダー\Compute">
+      <UniqueIdentifier>{82bbbb93-1f45-4381-b909-9e5fcf655938}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External_Libraries\imgui\imgui.cpp">
@@ -168,23 +177,29 @@
     <ClCompile Include="Source\character.cpp">
       <Filter>gameLib\Sources</Filter>
     </ClCompile>
-    <ClCompile Include="Source\gpu_particle_test.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\gpu_cube_particle.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Source\gpu_swirl_particle.cpp">
+      <Filter>ソース ファイル\Gpu</Filter>
     </ClCompile>
     <ClCompile Include="Source\gpu_sphere_particle.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Gpu</Filter>
     </ClCompile>
-    <ClCompile Include="Source\gpu_2d_texture_particle.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Source\gpu_particle_test.cpp">
+      <Filter>ソース ファイル\Gpu</Filter>
     </ClCompile>
-    <ClCompile Include="Source\gpu_swirl_particle.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Source\gpu_cube_particle.cpp">
+      <Filter>ソース ファイル\Gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\gpu_cloud_particle.cpp">
+      <Filter>ソース ファイル\Gpu</Filter>
     </ClCompile>
     <ClCompile Include="Source\gpu_absorption_particle.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\gpu_2d_texture_particle.cpp">
+      <Filter>ソース ファイル\Gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\gpu_particle_manager.cpp">
+      <Filter>ソース ファイル\Gpu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -347,23 +362,29 @@
     <ClInclude Include="Source\character.h">
       <Filter>gameLib\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\gpu_particle_test.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Source\gpu_2d_texture_particle.h">
+      <Filter>ヘッダー ファイル\Gpu</Filter>
     </ClInclude>
     <ClInclude Include="Source\gpu_cube_particle.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Gpu</Filter>
     </ClInclude>
-    <ClInclude Include="Source\gpu_sphere_particle.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\gpu_2d_texture_particle.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\gpu_swirl_particle.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Source\gpu_cloud_particle.h">
+      <Filter>ヘッダー ファイル\Gpu</Filter>
     </ClInclude>
     <ClInclude Include="Source\gpu_absorption_particle.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\gpu_particle_test.h">
+      <Filter>ヘッダー ファイル\Gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\gpu_sphere_particle.h">
+      <Filter>ヘッダー ファイル\Gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\gpu_swirl_particle.h">
+      <Filter>ヘッダー ファイル\Gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\gpu_particle_manager.h">
+      <Filter>ヘッダー ファイル\Gpu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -407,6 +428,9 @@
       <Filter>シェーダー</Filter>
     </None>
     <None Include="Source\swirl.hlsli">
+      <Filter>シェーダー\Compute</Filter>
+    </None>
+    <None Include="Source\gpu_cloud_particle_render.hlsli">
       <Filter>シェーダー</Filter>
     </None>
   </ItemGroup>
@@ -477,16 +501,10 @@
     <FxCompile Include="Source\combined_bloom.hlsl">
       <Filter>gameLib\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Source\compute_test.hlsl">
-      <Filter>シェーダー</Filter>
-    </FxCompile>
     <FxCompile Include="Source\gpu_particle_test_render_vs.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="Source\gpu_particle_test_render_ps.hlsl">
-      <Filter>シェーダー</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\sphere_particle_compute.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="Source\gpu_particle_2d_test_render_vs.hlsl">
@@ -496,12 +514,30 @@
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="Source\2d_texture_particle_compute.hlsl">
-      <Filter>シェーダー</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\swirl_particle_compute.hlsl">
-      <Filter>シェーダー</Filter>
+      <Filter>シェーダー\Compute</Filter>
     </FxCompile>
     <FxCompile Include="Source\absorpartion_particle_compute.hlsl">
+      <Filter>シェーダー\Compute</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\cloud_particle_compute.hlsl">
+      <Filter>シェーダー\Compute</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\compute_test.hlsl">
+      <Filter>シェーダー\Compute</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\sphere_particle_compute.hlsl">
+      <Filter>シェーダー\Compute</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\swirl_particle_compute.hlsl">
+      <Filter>シェーダー\Compute</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\gpu_clound_particle_render_vs.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\gpu_cloud_particle_render_ps.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\gpu_cloud_particle_render_gs.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
   </ItemGroup>

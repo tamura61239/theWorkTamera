@@ -31,6 +31,8 @@ void main( uint3 DTid : SV_DispatchThreadID )
 	uint set = step(0.01f, leng);
 	position = lerp(asfloat(resetParticle.Load4(bufferIndex + 0)), position, set);
 	color = lerp(asfloat(resetParticle.Load4(bufferIndex + 28)), color, set);
+	vec = centerPosition - position.xyz;
+	leng = length(vec);
 	//F‚â•s“§–¾“x‚ğ‹‚ß‚é
 	float l = leng - 4.f;
 	l = max(l,0);

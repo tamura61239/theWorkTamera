@@ -40,7 +40,7 @@ GpuSwirlParticle::GpuSwirlParticle(ID3D11Device* device, int maxParticle) :GpuPa
 		vertex.position.y = (rand2(mt) - 10000) * (rand100(mt)) * 0.00000001f * length;
 		vertex.position.z += cosf(angle) * 10.0f * length + cosf(angle + DirectX::XMConvertToRadians(90.0f)) * (rand2(mt) - 10000) * 0.0001f * length * 3.f;
 
-		vertex.color = VECTOR4F(1, 1, 1, 1);
+		vertex.color = VECTOR4F(0,0,0,0);
 		if (length > 0.4f)
 		{
 			vertex.color.w = 1.f - (length - 0.4f) / 0.6f;
@@ -66,7 +66,7 @@ GpuSwirlParticle::GpuSwirlParticle(ID3D11Device* device, int maxParticle) :GpuPa
 		vertex.position.y = (rand2(mt) - 10000) * (rand100(mt)) * 0.00000001f * length;
 		vertex.position.z += cosf(angle) * 10.0f * length + cosf(angle + DirectX::XMConvertToRadians(90.0f)) * (rand2(mt) - 10000) * 0.0001f * length * 3.f;
 
-		vertex.color = VECTOR4F(1, 1, 1, 1);
+		vertex.color = VECTOR4F(0,0,0,0);
 		//if (length > 0.4f)
 		//{
 		//	vertex.color.w = 1.f - (length - 0.4f) / 0.6f;
@@ -152,7 +152,7 @@ void GpuSwirlParticle::Update(ID3D11DeviceContext* context)
 	context->CSSetConstantBuffers(1, 1, mConputeConstanceBuffer.GetAddressOf());
 	context->UpdateSubresource(mConputeConstanceBuffer.Get(), 0, 0, &mComputeConstance, 0, 0);
 	//ŽÀs
-	context->Dispatch(mMaxParticle / 100, 1, 1);
+	context->Dispatch(static_cast<UINT>(mMaxParticle / 100), 1, 1);
 
 	uavs[0] = nullptr;
 	uavs[1] = nullptr;

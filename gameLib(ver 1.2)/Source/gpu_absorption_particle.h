@@ -10,7 +10,7 @@ private:
 	struct ComputeConstance
 	{
 		VECTOR3F centerPosition;
-		float dummy;
+		float size;
 	};
 	Microsoft::WRL::ComPtr<ID3D11Buffer>mConputeConstanceBuffer;
 	ComputeConstance mComputeConstance;

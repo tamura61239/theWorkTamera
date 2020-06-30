@@ -11,7 +11,7 @@
 #include"model_renderer.h"
 #include"bloom.h"
 #include"player.h"
-#include"gpu_particle_test.h"
+#include"gpu_particle_manager.h"
 
 class SceneGame :public Scene
 {
@@ -56,5 +56,5 @@ private:
 	std::unique_ptr<Player>player;
 	std::unique_ptr<ModelRenderer>modelRenderer;
 	std::unique_ptr<Bloom>bloom;
-	std::unique_ptr<GpuParticleTest>testGpuParticle;
+	std::unique_ptr<GpuParticleManager>mGParticleManager;
 };

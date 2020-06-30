@@ -5,7 +5,7 @@
 #include"shader.h"
 
 
-GpuAbsorptionParticle::GpuAbsorptionParticle(ID3D11Device* device, int maxParticle, int size, VECTOR3F center):GpuParticleTest(device)
+GpuAbsorptionParticle::GpuAbsorptionParticle(ID3D11Device* device, int maxParticle, int size, VECTOR3F center) :GpuParticleTest(device)
 {
 	std::random_device rnd;     // 非決定的な乱数生成器を生成
 	std::mt19937 mt(rnd());     //  メルセンヌ・ツイスタの32ビット版、引数は初期シード値
@@ -34,18 +34,18 @@ GpuAbsorptionParticle::GpuAbsorptionParticle(ID3D11Device* device, int maxPartic
 		Vertex vertex;
 		vertex.position = VECTOR4F(0, 0, 0, 1);
 		vertex.velocity = VECTOR3F(0, 0, 0);
-		vertex.color = VECTOR4F(1, 1, 1, 1);
+		vertex.color = VECTOR4F(0, 0, 0, 0);
 		float length = static_cast<float>(rand100(mt)) * 0.0001f;
 		length *= size;
 		float angle = static_cast<float>(randAngle(mt)) * 0.000001f;
-		vertex.position.x = sinf(angle) * length;
-		vertex.position.z = cosf(angle) * length;
+		vertex.position.x = center.x + sinf(angle) * length;
+		vertex.position.z = center.z + cosf(angle) * length;
 		vertices.push_back(vertex);
-		vertex.position.x = sinf(angle) * size;
-		vertex.position.z = cosf(angle) * size;
+		vertex.position.x = center.x + sinf(angle) * size;
+		vertex.position.z = center.z + cosf(angle) * size;
 		resetVertices.push_back(vertex);
 	}
-	mMaxParticle = vertices.size();
+	mMaxParticle = vertices.size() - 1;
 	//バッファ&view生成
 	{
 		D3D11_BUFFER_DESC desc;
@@ -82,7 +82,7 @@ GpuAbsorptionParticle::GpuAbsorptionParticle(ID3D11Device* device, int maxPartic
 
 	}
 	mComputeConstance.centerPosition = VECTOR3F(0, 0, 0);
-	mComputeConstance.dummy = static_cast<float>(size);
+	mComputeConstance.size = static_cast<float>(size);
 	// create constant buffer
 	{
 		D3D11_BUFFER_DESC bufferDesc = {};
@@ -101,11 +101,11 @@ GpuAbsorptionParticle::GpuAbsorptionParticle(ID3D11Device* device, int maxPartic
 void GpuAbsorptionParticle::Update(ID3D11DeviceContext* context)
 {
 	if (!mCSShader)return;
-	ID3D11UnorderedAccessView* uavs[] = { mUAV.Get() ,mResetUAV.Get()};
+	ID3D11UnorderedAccessView* uavs[] = { mUAV.Get() ,mResetUAV.Get() };
 	ID3D11ComputeShader* compute = mCSShader.Get();
 	context->CSSetUnorderedAccessViews(0, ARRAYSIZE(uavs), uavs, nullptr);
 	context->CSSetShader(compute, nullptr, 0);
-	context->CSSetConstantBuffers(1, 1, mConputeConstanceBuffer.GetAddressOf());
+	context->CSSetConstantBuffers(0, 1, mConputeConstanceBuffer.GetAddressOf());
 	context->UpdateSubresource(mConputeConstanceBuffer.Get(), 0, 0, &mComputeConstance, 0, 0);
 
 	//実行

@@ -6,11 +6,6 @@
 #include"camera_manager.h"
 #include"gamepad.h"
 #include"light.h"
-#include"gpu_cube_particle.h"
-#include"gpu_sphere_particle.h"
-#include"gpu_2d_texture_particle.h"
-#include"gpu_swirl_particle.h"
-#include"gpu_absorption_particle.h"
 #ifdef USE_IMGUI
 #include <imgui.h>
 #include <imgui_impl_dx11.h>
@@ -49,7 +44,7 @@ SceneGame::SceneGame(ID3D11Device* device)
 
 			modelRenderer = std::make_unique<ModelRenderer>(device);
 			bloom = std::make_unique<Bloom>(device, 1920, 1080);
-			testGpuParticle = std::make_unique<GpuAbsorptionParticle>(device,50000,100);
+			mGParticleManager = std::make_unique<GpuParticleManager>(device);
 		}, device);
 	test = std::make_unique<Sprite>(device, L"Data/image/ゲームテスト.png");
 	nowLoading = std::make_unique<Sprite>(device, L"Data/image/wp-thumb.jpg");
@@ -57,8 +52,8 @@ SceneGame::SceneGame(ID3D11Device* device)
 	blend[1] = std::make_unique<blend_state>(device, BLEND_MODE::ADD);
 	pCamera.CreateCamera();
 	pCamera.GetCamera()->SetEye(VECTOR3F(100, 40, -200));
-	pSoundManager.Play(0, true);
-	pSoundManager.SetVolume(0, 1.0f);
+	//pSoundManager.Play(0, true);
+	//pSoundManager.SetVolume(0, 1.0f);
 	pLight.CreateLightBuffer(device);
 }
 static 	float playerPosition[3] = { 20, -10, 0 };
@@ -91,7 +86,7 @@ void SceneGame::Update(float elapsed_time)
 	if (pKeyBoad.RisingState(KeyLabel::SPACE))
 	{
 		pSceneManager.ChangeScene(SCENETYPE::OVER);
-		pSoundManager.Stop(0);
+		//pSoundManager.Stop(0);
 		return;
 	}
 }
@@ -131,7 +126,7 @@ void SceneGame::Render(ID3D11DeviceContext* context, float elapsed_time)
 
 		return;
 	}
-	testGpuParticle->Update(context);
+	mGParticleManager->Update(context);
 	/**********************シャドウマップテクスチャの作成************************/
 	//shadowMap->Clear(context);
 	//shadowMap->Activate(context);
@@ -189,10 +184,10 @@ void SceneGame::Render(ID3D11DeviceContext* context, float elapsed_time)
 	//}
 	meshRender->Render(context, staticObjs[1]->GetMesh(), staticObjs[1]->GetWorld(),VECTOR4F(0.1,0.1,0.1,1));
 	meshRender->End(context);
-	//blend[0]->deactivate(context);
-	//blend[1]->activate(context);
-	testGpuParticle->Render(context, pCamera.GetCamera()->GetView(), pCamera.GetCamera()->GetProjection());
 	blend[0]->deactivate(context);
+	blend[1]->activate(context);
+	mGParticleManager->Render(context, view, projection);
+	blend[1]->deactivate(context);
 	frameBuffer[0]->Deactivate(context);
 
 	///****************影をつける******************/

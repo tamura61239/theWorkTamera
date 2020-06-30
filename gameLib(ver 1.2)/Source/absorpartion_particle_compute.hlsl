@@ -1,4 +1,8 @@
-#include"swirl.hlsli"
+cbuffer Comstance:register(b0)
+{
+	float3 centerPosition;
+	float size;
+}
 
 RWByteAddressBuffer		rwbParticle : register(u0);
 RWByteAddressBuffer		resetParticle : register(u1);
@@ -6,7 +10,7 @@ RWByteAddressBuffer		resetParticle : register(u1);
 [numthreads(100, 1, 1)]
 void main( uint3 DTid : SV_DispatchThreadID )
 {
-	uint	index = DTid.z * 100 * 1 + DTid.y * 100 + DTid.x;
+	uint index = DTid.z + DTid.y + DTid.x;
 
 	uint bufferIndex = index * 44;
 	float4 position = asfloat(rwbParticle.Load4(bufferIndex + 0));
@@ -26,19 +30,21 @@ void main( uint3 DTid : SV_DispatchThreadID )
 	uint set = step(0.1f, leng);
 	position = lerp(asfloat(resetParticle.Load4(bufferIndex + 0)), position, set);
 	color = lerp(asfloat(resetParticle.Load4(bufferIndex + 28)), color, set);
+	vec = centerPosition - position.xyz;
+	leng = length(vec);
 	//êFÇ‚ïsìßñæìxÇãÅÇﬂÇÈ
-	float l = leng - 0.4f*dummy;
-	l /= 0.1f * dummy;
+	float l = leng - 0.4f* size;
+	l /= 0.1f * size;
 	l = max(l, 0);
 	l = min(l, 1);
 	color.rgb = lerp(float3(1, 0.5, 0), float3(0, 1, 1), l);
-	l = leng - 0.7f*dummy;
+	l = leng - 0.7f* size;
 	l /= 3.f;
 	l = max(l, 0);
 	l = min(l, 1);
-	color.w = lerp(1, 0, l);
+	color.a = lerp(1, 0, l);
 
-
+	
 	rwbParticle.Store4(bufferIndex + 0, asuint(position));
 	rwbParticle.Store3(bufferIndex + 16, asuint(velocity));
 	rwbParticle.Store4(bufferIndex + 28, asuint(color));

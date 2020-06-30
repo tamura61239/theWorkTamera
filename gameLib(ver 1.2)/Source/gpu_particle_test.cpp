@@ -38,20 +38,10 @@ GpuParticleTest::GpuParticleTest(ID3D11Device* device) :mMaxParticle(0),mVertexS
 
 		//_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		D3D11_DEPTH_STENCIL_DESC depth_stencil_desc = {};
-		depth_stencil_desc.DepthEnable = TRUE;
+		depth_stencil_desc.DepthEnable = false;
 		depth_stencil_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 		depth_stencil_desc.DepthFunc = D3D11_COMPARISON_LESS;
-		depth_stencil_desc.StencilEnable = FALSE;
-		depth_stencil_desc.StencilReadMask = 0xFF;
-		depth_stencil_desc.StencilWriteMask = 0xFF;
-		depth_stencil_desc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-		depth_stencil_desc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-		depth_stencil_desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-		depth_stencil_desc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-		depth_stencil_desc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-		depth_stencil_desc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-		depth_stencil_desc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-		depth_stencil_desc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+		depth_stencil_desc.StencilEnable = false;
 		hr = device->CreateDepthStencilState(&depth_stencil_desc, mDepthStencilState.GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
