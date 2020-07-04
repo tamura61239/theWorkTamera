@@ -201,6 +201,9 @@
     <ClCompile Include="Source\gpu_particle_manager.cpp">
       <Filter>ソース ファイル\Gpu</Filter>
     </ClCompile>
+    <ClCompile Include="Source\gpu_wing_particle.cpp">
+      <Filter>ソース ファイル\Gpu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External_Libraries\imgui\imconfig.h">
@@ -386,6 +389,9 @@
     <ClInclude Include="Source\gpu_particle_manager.h">
       <Filter>ヘッダー ファイル\Gpu</Filter>
     </ClInclude>
+    <ClInclude Include="Source\gpu_wing_particle.h">
+      <Filter>ヘッダー ファイル\Gpu</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\board.hlsli">
@@ -538,6 +544,12 @@
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="Source\gpu_cloud_particle_render_gs.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\wing_particle_compute.hlsl">
+      <Filter>シェーダー\Compute</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\gpu_wing_particle_vs.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
   </ItemGroup>

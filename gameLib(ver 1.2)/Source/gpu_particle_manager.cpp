@@ -4,6 +4,7 @@
 #include"gpu_swirl_particle.h"
 #include"gpu_absorption_particle.h"
 #include"gpu_cloud_particle.h"
+#include"gpu_wing_particle.h"
 #ifdef USE_IMGUI
 #include <imgui.h>
 #endif
@@ -15,6 +16,7 @@ GpuParticleManager::GpuParticleManager(ID3D11Device* device):particleNimber(0)
 	particles.emplace_back(std::make_shared<GpuSwirlParticle>(device, 50000), "Swirl");
 	particles.emplace_back(std::make_shared<GpuAbsorptionParticle>(device, 100000), "Absorption");
 	particles.emplace_back(std::make_shared<GpuCloudParticle>(device, 200000), "Cloud");
+	particles.emplace_back(std::make_shared<GpuWingParticle>(device, 100000), "Wing");
 }
 static auto vector_getter = [](void* vec, int idx, const char** out_text)
 {

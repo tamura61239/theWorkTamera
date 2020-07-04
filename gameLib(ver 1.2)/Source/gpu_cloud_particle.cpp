@@ -157,10 +157,6 @@ void GpuCloudParticle::Update(ID3D11DeviceContext* context)
 	{
 		mConputeComstance.startIndex += mConputeComstance.indexSize;
 	}
-	else
-	{
-		mConputeComstance.startIndex;
-	}
 	uavs[0] = nullptr;
 	context->CSSetUnorderedAccessViews(0, ARRAYSIZE(uavs), uavs, nullptr);
 
