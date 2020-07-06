@@ -82,7 +82,7 @@ GpuParticleTest::GpuParticleTest(ID3D11Device* device) :mMaxParticle(0),mVertexS
 
 }
 
-void GpuParticleTest::Update(ID3D11DeviceContext* context)
+void GpuParticleTest::Update(ID3D11DeviceContext* context,float elapsd_time)
 {
 	if (!mCSShader)return;
 	ID3D11UnorderedAccessView* uavs[] = { mUAV.Get() };

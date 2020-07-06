@@ -126,7 +126,7 @@ void SceneGame::Render(ID3D11DeviceContext* context, float elapsed_time)
 
 		return;
 	}
-	mGParticleManager->Update(context);
+	mGParticleManager->Update(context,elapsed_time);
 	/**********************シャドウマップテクスチャの作成************************/
 	//shadowMap->Clear(context);
 	//shadowMap->Activate(context);

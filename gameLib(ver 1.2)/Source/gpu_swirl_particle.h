@@ -5,7 +5,7 @@ class GpuSwirlParticle :public GpuParticleTest
 {
 public:
 	GpuSwirlParticle(ID3D11Device* device, int maxParticle = 10000);
-	void Update(ID3D11DeviceContext* context);
+	void Update(ID3D11DeviceContext* context, float elapsd_time);
 	//void Render(ID3D11DeviceContext* context, const FLOAT4X4& view, const FLOAT4X4& projection);
 private:
 	struct ComputeConstance

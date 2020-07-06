@@ -98,7 +98,7 @@ GpuAbsorptionParticle::GpuAbsorptionParticle(ID3D11Device* device, int maxPartic
 
 }
 
-void GpuAbsorptionParticle::Update(ID3D11DeviceContext* context)
+void GpuAbsorptionParticle::Update(ID3D11DeviceContext* context, float elapsd_time)
 {
 	if (!mCSShader)return;
 	ID3D11UnorderedAccessView* uavs[] = { mUAV.Get() ,mResetUAV.Get() };

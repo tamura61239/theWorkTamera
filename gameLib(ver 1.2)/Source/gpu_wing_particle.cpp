@@ -123,7 +123,7 @@ GpuWingParticle::GpuWingParticle(ID3D11Device* device, const int maxParticle, co
 
 }
 
-void GpuWingParticle::Update(ID3D11DeviceContext* context)
+void GpuWingParticle::Update(ID3D11DeviceContext* context, float elapsd_time)
 {
 	if (!mCSShader)return;
 	ID3D11UnorderedAccessView* uavs[] = { mUAV.Get() ,mResetUAV.Get() };

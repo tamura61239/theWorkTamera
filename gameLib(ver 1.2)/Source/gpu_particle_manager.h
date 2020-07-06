@@ -8,7 +8,7 @@ class GpuParticleManager
 {
 public:
 	GpuParticleManager(ID3D11Device* device);
-	void Update(ID3D11DeviceContext* context);
+	void Update(ID3D11DeviceContext* context,float elapsd_time);
 	void Render(ID3D11DeviceContext* context, const FLOAT4X4& view, const FLOAT4X4& projection);
 	~GpuParticleManager() { particles.clear(); }
 private:

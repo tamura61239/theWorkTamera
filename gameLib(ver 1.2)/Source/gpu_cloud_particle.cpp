@@ -123,7 +123,7 @@ GpuCloudParticle::GpuCloudParticle(ID3D11Device* device, int maxParticle, const 
 	mConputeComstance.windVelocity = VECTOR3F(0, 0, 1);
 }
 
-void GpuCloudParticle::Update(ID3D11DeviceContext* context)
+void GpuCloudParticle::Update(ID3D11DeviceContext* context, float elapsd_time)
 {
 #ifdef USE_IMGUI
 	ImGui::Begin("cloudParticle");

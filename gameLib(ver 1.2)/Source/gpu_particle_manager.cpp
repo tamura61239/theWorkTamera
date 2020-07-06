@@ -5,6 +5,7 @@
 #include"gpu_absorption_particle.h"
 #include"gpu_cloud_particle.h"
 #include"gpu_wing_particle.h"
+#include"gpu_curl_noise_particle.h"
 #ifdef USE_IMGUI
 #include <imgui.h>
 #endif
@@ -17,6 +18,7 @@ GpuParticleManager::GpuParticleManager(ID3D11Device* device):particleNimber(0)
 	particles.emplace_back(std::make_shared<GpuAbsorptionParticle>(device, 100000), "Absorption");
 	particles.emplace_back(std::make_shared<GpuCloudParticle>(device, 200000), "Cloud");
 	particles.emplace_back(std::make_shared<GpuWingParticle>(device, 100000), "Wing");
+	particles.emplace_back(std::make_shared<GpuCurlNoiseParticle>(device), "CurlNoise");
 }
 static auto vector_getter = [](void* vec, int idx, const char** out_text)
 {
@@ -26,7 +28,7 @@ static auto vector_getter = [](void* vec, int idx, const char** out_text)
 	return true;
 };
 
-void GpuParticleManager::Update(ID3D11DeviceContext* context)
+void GpuParticleManager::Update(ID3D11DeviceContext* context, float elapsd_time)
 {
 	std::vector<std::string>particleName;
 	for (auto& particle : particles)
@@ -38,7 +40,7 @@ void GpuParticleManager::Update(ID3D11DeviceContext* context)
 	ImGui::Combo("particleName", &particleNimber, vector_getter, static_cast<void*>(&particleName), particleName.size());
 	ImGui::End();
 #endif
-	particles[particleNimber].GetParticle()->Update(context);
+	particles[particleNimber].GetParticle()->Update(context, elapsd_time);
 }
 
 void GpuParticleManager::Render(ID3D11DeviceContext* context, const FLOAT4X4& view, const FLOAT4X4& projection)

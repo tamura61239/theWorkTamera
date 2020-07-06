@@ -69,7 +69,7 @@ Gpu2DTextureParticle::Gpu2DTextureParticle(ID3D11Device* device, VECTOR2F size):
 
 }
 
-void Gpu2DTextureParticle::Update(ID3D11DeviceContext* context)
+void Gpu2DTextureParticle::Update(ID3D11DeviceContext* context, float elapsd_time)
 {
 	if (!mCSShader)return;
 	ID3D11UnorderedAccessView* uavs[] = { mUAV.Get() };

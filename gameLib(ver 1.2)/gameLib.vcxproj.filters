@@ -204,6 +204,9 @@
     <ClCompile Include="Source\gpu_wing_particle.cpp">
       <Filter>ソース ファイル\Gpu</Filter>
     </ClCompile>
+    <ClCompile Include="Source\gpu_curl_noise_particle.cpp">
+      <Filter>ソース ファイル\Gpu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External_Libraries\imgui\imconfig.h">
@@ -392,6 +395,9 @@
     <ClInclude Include="Source\gpu_wing_particle.h">
       <Filter>ヘッダー ファイル\Gpu</Filter>
     </ClInclude>
+    <ClInclude Include="Source\gpu_curl_noise_particle.h">
+      <Filter>ヘッダー ファイル\Gpu</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\board.hlsli">
@@ -438,6 +444,9 @@
     </None>
     <None Include="Source\gpu_cloud_particle_render.hlsli">
       <Filter>シェーダー</Filter>
+    </None>
+    <None Include="Source\curl_noise.hlsli">
+      <Filter>シェーダー\Compute</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -550,6 +559,12 @@
       <Filter>シェーダー\Compute</Filter>
     </FxCompile>
     <FxCompile Include="Source\gpu_wing_particle_vs.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\curl_noise_particle_compute.hlsl">
+      <Filter>シェーダー\Compute</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\gpu_curl_noise_particle_render_vs.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
   </ItemGroup>

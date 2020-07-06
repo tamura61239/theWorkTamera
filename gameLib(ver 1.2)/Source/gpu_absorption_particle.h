@@ -5,7 +5,7 @@ class GpuAbsorptionParticle :public GpuParticleTest
 {
 public:
 	GpuAbsorptionParticle(ID3D11Device* device, int maxParticle = 10000,int size=10, VECTOR3F center = VECTOR3F(0, 0, 0));
-	void Update(ID3D11DeviceContext* context);
+	void Update(ID3D11DeviceContext* context, float elapsd_time);
 private:
 	struct ComputeConstance
 	{

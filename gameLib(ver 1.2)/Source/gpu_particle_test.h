@@ -8,7 +8,7 @@ class GpuParticleTest
 {
 public:
 	GpuParticleTest(ID3D11Device* device);
-	virtual void Update(ID3D11DeviceContext* context);
+	virtual void Update(ID3D11DeviceContext* context, float elapsd_time);
 	//virtual Obj3D* GetObj() { return mObj.get(); }
 	virtual void Render(ID3D11DeviceContext* context, const FLOAT4X4& view, const FLOAT4X4& projection);
 	struct Vertex

@@ -125,7 +125,7 @@ GpuSwirlParticle::GpuSwirlParticle(ID3D11Device* device, int maxParticle) :GpuPa
 
 }
 
-void GpuSwirlParticle::Update(ID3D11DeviceContext* context)
+void GpuSwirlParticle::Update(ID3D11DeviceContext* context, float elapsd_time)
 {
 	if (!mCSShader)return;
 	std::random_device rnd;     // ”ñŒˆ’è“I‚È—”¶¬Ší‚ğ¶¬

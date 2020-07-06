@@ -6,7 +6,7 @@ class GpuCloudParticle :public GpuParticleTest
 public:
 	GpuCloudParticle(ID3D11Device* device, int maxParticle = 10000, const VECTOR2F& maxLength = VECTOR2F(1000, 1000),
 		const VECTOR3F& cloudDirection = VECTOR3F(-1, 0, 0), const VECTOR3F& startPosition = VECTOR3F(0, 0, 0));
-	void Update(ID3D11DeviceContext* context);
+	void Update(ID3D11DeviceContext* context, float elapsd_time);
 	void Render(ID3D11DeviceContext* context, const FLOAT4X4& view, const FLOAT4X4& projection);
 private:
 	struct VertexCloud
