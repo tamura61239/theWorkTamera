@@ -14,27 +14,6 @@ cbuffer NoiseParameter:register(b1)
 	float noizeNormalizeFlag;
 	float noiseSize;
 }
-//float3 curlNoise(float3 p)
-//{
-//	const float e = 5.f;
-//	float3 dx = float3(e, 0, 0);
-//	float3 dy = float3(0, e, 0);
-//	float3 dz = float3(0, 0, e);
-//
-//	float3 p0X = snoise(p - dx);
-//	float3 p1X = snoise(p + dx);
-//	float3 p0Y = snoise(p - dy);
-//	float3 p1Y = snoise(p + dy);
-//	float3 p0Z = snoise(p - dz);
-//	float3 p1Z = snoise(p + dz);
-//
-//	float x = p0X.x + p1X.x - p0Y.x + p1Y.x - p0Z.x + p1Z.x;
-//	float y = p0X.y + p1X.y - p0Y.y + p1Y.y - p0Z.y + p1Z.y;
-//	float z = p0X.z + p1X.z - p0Y.z + p1Y.z - p0Z.z + p1Z.z;
-//
-//	const float divisor = 1 / (2 * e);
-//	return normalize(float3(x, y, z));
-//}
 float4 grad4(float j, float4 ip)
 {
 	float4 ones = float4(1, 1, 1, -1);
