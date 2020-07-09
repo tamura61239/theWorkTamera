@@ -21,5 +21,21 @@ private:
 		VECTOR4F startColor;
 		VECTOR4F endColor;
 	};
+	struct NoiseParameter
+	{
+		float maxParticle;
+		float speed;
+		float noizeNormalizeFlag;
+		float noiseSize;
+	};
+	struct Parameter
+	{
+		float randSpeed;
+		bool defSpeedFlag;
+		float defSpeed;
+	};
 	CurlNoise mCurlNoise;
+	NoiseParameter mNoiseParameter;
+	Parameter mParameter;
+	Microsoft::WRL::ComPtr<ID3D11Buffer>mNoiseBuffer;
 };

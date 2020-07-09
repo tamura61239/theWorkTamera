@@ -3,8 +3,11 @@
 #include<random>
 #include "misc.h"
 #include"shader.h"
+#ifdef USE_IMGUI
+#include <imgui.h>
+#endif
 
-GpuCurlNoiseParticle::GpuCurlNoiseParticle(ID3D11Device* device, const int maxParticle):GpuParticleTest(device)
+GpuCurlNoiseParticle::GpuCurlNoiseParticle(ID3D11Device* device, const int maxParticle) :GpuParticleTest(device)
 {
 	HRESULT hr = S_OK;
 	hr = create_cs_from_cso(device, "Data/shader/curl_noise_particle_compute.cso", mCSShader.GetAddressOf());
@@ -24,7 +27,7 @@ GpuCurlNoiseParticle::GpuCurlNoiseParticle(ID3D11Device* device, const int maxPa
 	for (int i = 0;i < maxParticle;i++)
 	{
 		vertices.push_back(VertexCurlNoise());
-		vertices.back().life = rand()%6;
+		vertices.back().life = static_cast<float>(rand() % 2000) / 1000;
 		vertices.back().color = VECTOR4F(0, 0, 0, 0);
 		vertices.back().velocity = VECTOR3F(0, 0, 0);
 		vertices.back().position = VECTOR4F(0, 0, 0, 0);
@@ -65,24 +68,67 @@ GpuCurlNoiseParticle::GpuCurlNoiseParticle(ID3D11Device* device, const int maxPa
 		desc.Usage = D3D11_USAGE_DEFAULT;
 		hr = device->CreateBuffer(&desc, nullptr, mCoputeBuffer.GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(&hr), hr_trace(hr));
+		desc.ByteWidth = sizeof(NoiseParameter);
+		hr = device->CreateBuffer(&desc, nullptr, mNoiseBuffer.GetAddressOf());
+		_ASSERT_EXPR(SUCCEEDED(&hr), hr_trace(hr));
 	}
 	mMaxParticle = maxParticle;
 	mVertexSize = sizeof(VertexCurlNoise);
 	mCurlNoise.startPosition = VECTOR3F(0, 0, 0);
 	mCurlNoise.startColor = VECTOR4F(1, 1, 1, 1);
-	mCurlNoise.endColor = VECTOR4F(1, 1, 1, 1);
+	mCurlNoise.endColor = VECTOR4F(0, 0, 1, 1);
+	mNoiseParameter.maxParticle = mMaxParticle;
+	mNoiseParameter.noizeNormalizeFlag = 0;
+	mNoiseParameter.noiseSize = 49;
+	mNoiseParameter.speed = 1 / 60;
+	mParameter.defSpeedFlag = true;
+	mParameter.randSpeed = 1000;
+	mParameter.defSpeed = 10;
 }
 
 void GpuCurlNoiseParticle::Update(ID3D11DeviceContext* context, float elapsd_time)
 {
 	if (!mCSShader)return;
+#ifdef USE_IMGUI
+	ImGui::Begin("curl noise");
+	float* position[3] = { &mCurlNoise.startPosition.x,&mCurlNoise.startPosition.y ,&mCurlNoise.startPosition.z };
+	ImGui::SliderFloat3("startPosition", *position,-500,500);
+	//noiseSize
+	static bool normalizeFlag = false;
+	ImGui::Checkbox("noiseNormalizeFlag", &normalizeFlag);
+	mNoiseParameter.noizeNormalizeFlag = static_cast<float>(normalizeFlag);
+	if (!normalizeFlag)
+	{
+		ImGui::SliderFloat("noiseSize", &mNoiseParameter.noiseSize, 0, 100);
+	}
+	//speed
+	ImGui::Checkbox("defSpeedFlag", &mParameter.defSpeedFlag);
+	if (!mParameter.defSpeedFlag)
+	{
+		ImGui::SliderFloat("speed", &mParameter.defSpeed, -20, 20);
+		ImGui::SliderFloat("randSpeed", &mParameter.randSpeed, 1000, 5000);
+		std::random_device rnd;     // 非決定的な乱数生成器を生成
+		std::mt19937 mt(rnd());     //  メルセンヌ・ツイスタの32ビット版、引数は初期シード値
+		std::uniform_int_distribution<> randSpeed(1000, static_cast<u_int>(mParameter.randSpeed));
+		mNoiseParameter.speed = mParameter.defSpeed / (static_cast<float>(randSpeed(mt)));
+	}
+	else
+	{
+		mNoiseParameter.speed = elapsd_time;
+	}
+
+	ImGui::DragFloat("maxRand", &mNoiseParameter.maxParticle, 1, 0, mMaxParticle);
+	ImGui::End();
+#endif
 	mCurlNoise.timer = elapsd_time;
 	ID3D11UnorderedAccessView* uavs[] = { mUAV.Get() };
 	ID3D11ComputeShader* compute = mCSShader.Get();
 	context->CSSetShader(compute, nullptr, 0);
 	context->CSSetUnorderedAccessViews(0, ARRAYSIZE(uavs), uavs, nullptr);
 	context->CSSetConstantBuffers(0, 1, mCoputeBuffer.GetAddressOf());
+	context->CSSetConstantBuffers(1, 1, mNoiseBuffer.GetAddressOf());
 	context->UpdateSubresource(mCoputeBuffer.Get(), 0, 0, &mCurlNoise, 0, 0);
+	context->UpdateSubresource(mNoiseBuffer.Get(), 0, 0, &mNoiseParameter, 0, 0);
 	context->Dispatch(mMaxParticle / 100, 1, 1);
 
 	uavs[0] = nullptr;

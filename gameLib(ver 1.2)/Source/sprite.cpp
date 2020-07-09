@@ -237,6 +237,7 @@ void Sprite::Render(ID3D11DeviceContext* context, const VECTOR2F& position, cons
 	context->PSSetShader(mPSShader.Get(), NULL, 0);
 	context->PSSetShaderResources(0, 1, mTexview.GetAddressOf());
 	context->PSSetSamplers(0, 1, mSamplerState.GetAddressOf());
+	context->OMSetDepthStencilState(mDepthStencilState.Get(), 0);
 
 	context->Draw(4, 0);
 

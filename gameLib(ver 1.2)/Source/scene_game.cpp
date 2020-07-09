@@ -185,9 +185,9 @@ void SceneGame::Render(ID3D11DeviceContext* context, float elapsed_time)
 	meshRender->Render(context, staticObjs[1]->GetMesh(), staticObjs[1]->GetWorld(),VECTOR4F(0.1,0.1,0.1,1));
 	meshRender->End(context);
 	blend[0]->deactivate(context);
-	blend[1]->activate(context);
+	blend[0]->activate(context);
 	mGParticleManager->Render(context, view, projection);
-	blend[1]->deactivate(context);
+	blend[0]->deactivate(context);
 	frameBuffer[0]->Deactivate(context);
 
 	///****************‰e‚ð‚Â‚¯‚é******************/
