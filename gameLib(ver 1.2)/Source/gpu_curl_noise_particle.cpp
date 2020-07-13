@@ -81,6 +81,8 @@ GpuCurlNoiseParticle::GpuCurlNoiseParticle(ID3D11Device* device, const int maxPa
 	mNoiseParameter.noizeNormalizeFlag = 0;
 	mNoiseParameter.noiseSize = 49;
 	mNoiseParameter.speed = 1 / 60;
+	mNoiseParameter.vec0 = VECTOR3F(0, -100, 0);
+	mNoiseParameter.vec1 = VECTOR3F(0, -100, 0);
 	mParameter.defSpeedFlag = true;
 	mParameter.randSpeed = 1000;
 	mParameter.defSpeed = 10;
@@ -92,7 +94,11 @@ void GpuCurlNoiseParticle::Update(ID3D11DeviceContext* context, float elapsd_tim
 #ifdef USE_IMGUI
 	ImGui::Begin("curl noise");
 	float* position[3] = { &mCurlNoise.startPosition.x,&mCurlNoise.startPosition.y ,&mCurlNoise.startPosition.z };
-	ImGui::SliderFloat3("startPosition", *position,-500,500);
+	ImGui::SliderFloat3("startPosition", *position, -1500, 1500);
+	float* vec0[3] = { &mNoiseParameter.vec0.x,&mNoiseParameter.vec0.y ,&mNoiseParameter.vec0.z };
+	ImGui::SliderFloat3("Vec0", *vec0, -1500, 1500);
+	float* vec1[3] = { &mNoiseParameter.vec1.x,&mNoiseParameter.vec1.y ,&mNoiseParameter.vec1.z };
+	ImGui::SliderFloat3("Vec1", *vec1,-1500,1500);
 	//noiseSize
 	static bool normalizeFlag = false;
 	ImGui::Checkbox("noiseNormalizeFlag", &normalizeFlag);

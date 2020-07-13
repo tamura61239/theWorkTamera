@@ -27,6 +27,9 @@ private:
 		float speed;
 		float noizeNormalizeFlag;
 		float noiseSize;
+		VECTOR3F vec0;
+		VECTOR3F vec1;
+		VECTOR2F dummy;
 	};
 	struct Parameter
 	{
