@@ -43,7 +43,7 @@ SceneGame::SceneGame(ID3D11Device* device)
 			player = std::make_unique<Player>(std::make_shared<Character>(resource));
 
 			modelRenderer = std::make_unique<ModelRenderer>(device);
-			bloom = std::make_unique<Bloom>(device, 1920, 1080);
+			bloom = std::make_unique<BloomRender>(device, 1920, 1080);
 			mGParticleManager = std::make_unique<GpuParticleManager>(device);
 		}, device);
 	test = std::make_unique<Sprite>(device, L"Data/image/ƒQ[ƒ€ƒeƒXƒg.png");
@@ -81,8 +81,12 @@ void SceneGame::Update(float elapsed_time)
 	ImGui::Begin("player");
 	ImGui::DragFloat3("position", playerPosition);
 	ImGui::End();
+	ImGui::Begin("buffer");
+	ImGui::Image(frameBuffer[0]->GetRenderTargetShaderResourceView().Get(),ImVec2(1920,1080));
+	ImGui::End();
 #endif
 	player->Update(elapsed_time);
+	bloom->ImGuiUpdate();
 	if (pKeyBoad.RisingState(KeyLabel::SPACE))
 	{
 		pSceneManager.ChangeScene(SCENETYPE::OVER);
@@ -182,10 +186,10 @@ void SceneGame::Render(ID3D11DeviceContext* context, float elapsed_time)
 	//{
 	//	meshRender->Render(context, obj->GetMesh(), obj->GetWorld());
 	//}
-	meshRender->Render(context, staticObjs[1]->GetMesh(), staticObjs[1]->GetWorld(),VECTOR4F(0.1,0.1,0.1,1));
+	//meshRender->Render(context, staticObjs[1]->GetMesh(), staticObjs[1]->GetWorld(),VECTOR4F(0.1,0.1,0.1,1));
 	meshRender->End(context);
-	blend[0]->deactivate(context);
-	blend[0]->activate(context);
+	//blend[0]->deactivate(context);
+	//blend[0]->activate(context);
 	mGParticleManager->Render(context, view, projection);
 	blend[0]->deactivate(context);
 	frameBuffer[0]->Deactivate(context);
@@ -193,6 +197,7 @@ void SceneGame::Render(ID3D11DeviceContext* context, float elapsed_time)
 	///****************‰e‚ð‚Â‚¯‚é******************/
 	//renderEffects->ShadowRender(context, frameBuffer[0]->GetRenderTargetShaderResourceView().Get(), frameBuffer[0]->GetDepthStencilShaderResourceView().Get(), shadowMap->GetDepthStencilShaderResourceView().Get(), view, projection, lightCamera.GetView(), lightCamera.GetProjection());
 	bloom->Render(context, frameBuffer[0]->GetRenderTargetShaderResourceView().Get(), true);
+	//test->Render(context, bloom->GetFrameBuffer()[5]->GetRenderTargetShaderResourceView().Get(), VECTOR2F(0, 0), VECTOR2F(1920, 1080), VECTOR2F(0, 0), VECTOR2F(1920, 1080), 0);
 }
 
 SceneGame::~SceneGame()

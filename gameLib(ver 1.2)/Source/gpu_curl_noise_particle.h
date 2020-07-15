@@ -41,4 +41,5 @@ private:
 	NoiseParameter mNoiseParameter;
 	Parameter mParameter;
 	Microsoft::WRL::ComPtr<ID3D11Buffer>mNoiseBuffer;
+	Microsoft::WRL::ComPtr<ID3D11GeometryShader>mGSShader;
 };

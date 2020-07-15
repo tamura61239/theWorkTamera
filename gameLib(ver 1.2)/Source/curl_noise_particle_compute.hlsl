@@ -127,30 +127,10 @@ float3 curl(in float3 p, in float noiseTime, in float persistence) {
 }
 
 float3 curlNoise(float3 p) {
-	//const float e = 0.1f;
-	//const float e2 = 2.0 * e;
-
-	//float3 dx = float3(e, 0.0, 0.0);
-	//float3 dy = float3(0.0, e, 0.0);
-	//float3 dz = float3(0.0, 0.0, e);
-
-	//float3 p_x0 = snoise(p - dx);
-	//float3 p_x1 = snoise(p + dx);
-	//float3 p_y0 = snoise(p - dy);
-	//float3 p_y1 = snoise(p + dy);
-	//float3 p_z0 = snoise(p - dz);
-	//float3 p_z1 = snoise(p + dz);
-
-	//float x = p_y1.z - p_y0.z - p_z1.y + p_z0.y;
-	//float y = p_z1.x - p_z0.x - p_x1.z + p_x0.z;
-	//float z = p_x1.y - p_x0.y - p_y1.x + p_y0.x;
-
-	//return normalize(float3(x, y, z));
-	float3 e = float3(0.1f, 0.5f, 10);
-	float3 p0 = snoise(p);
-	float3 p1 = snoise(p - e*5.f);
-	float3 p2 = snoise(p + e*5.f);
-	return normalize(p0 + p1 + p2);
+	float3 noise0 = snoise(p);
+	float3 noise1 = snoise(vec0);
+	float3 noise2 = snoise(vec1);
+	return normalize(noise0 + noise1 + noise2);
 }
 #else
 float3 snoise_grad(float3 v)
@@ -278,6 +258,7 @@ void main(uint3 DTid : SV_DispatchThreadID)
 	velocity = lerp(normalize(startPosition-position.xyz), velocity, set);
 	life = lerp(2, life, set);
 	color = lerp(endColor, startColor, max(life / 2, 0));
+	//color.a += 1.f;
 	rwBuffer.Store4(bufferIndex + 0, asuint(position));
 	rwBuffer.Store3(bufferIndex + 16, asuint(velocity));
 	rwBuffer.Store4(bufferIndex + 28, asuint(color));

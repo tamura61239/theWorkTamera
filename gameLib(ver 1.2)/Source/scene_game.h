@@ -55,6 +55,6 @@ private:
 	std::unique_ptr<RenderEffects>renderEffects;
 	std::unique_ptr<Player>player;
 	std::unique_ptr<ModelRenderer>modelRenderer;
-	std::unique_ptr<Bloom>bloom;
+	std::unique_ptr<BloomRender>bloom;
 	std::unique_ptr<GpuParticleManager>mGParticleManager;
 };

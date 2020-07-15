@@ -8,9 +8,14 @@ class Sprite
 public:
 	//コンストラクタ
 	Sprite(ID3D11Device* device, const wchar_t* fileName);
+	Sprite(ID3D11Device* device);
+	//画像
+	void Load(ID3D11Device* device, const wchar_t* fileName);
 	//描画
 	void Render(ID3D11DeviceContext* context, const VECTOR2F& position, const VECTOR2F& size,
-		const VECTOR2F& texPosition, const VECTOR2F& texSize, float angle, const VECTOR4F&color = VECTOR4F(1.0f, 1.0f, 1.0f, 1.0f));
+		const VECTOR2F& texPosition, const VECTOR2F& texSize, float angle, const VECTOR4F& color = VECTOR4F(1.0f, 1.0f, 1.0f, 1.0f));
+	void Render(ID3D11DeviceContext* context, ID3D11ShaderResourceView* srv, const VECTOR2F& position, const VECTOR2F& size,
+		const VECTOR2F& texPosition, const VECTOR2F& texSize, float angle, const VECTOR4F& color = VECTOR4F(1.0f, 1.0f, 1.0f, 1.0f));
 	//~Sprite()
 	//{
 	//	delete mVSBuffer;

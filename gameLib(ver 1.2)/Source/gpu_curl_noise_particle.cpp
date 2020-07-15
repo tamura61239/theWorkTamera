@@ -95,10 +95,14 @@ void GpuCurlNoiseParticle::Update(ID3D11DeviceContext* context, float elapsd_tim
 	ImGui::Begin("curl noise");
 	float* position[3] = { &mCurlNoise.startPosition.x,&mCurlNoise.startPosition.y ,&mCurlNoise.startPosition.z };
 	ImGui::SliderFloat3("startPosition", *position, -1500, 1500);
-	float* vec0[3] = { &mNoiseParameter.vec0.x,&mNoiseParameter.vec0.y ,&mNoiseParameter.vec0.z };
-	ImGui::SliderFloat3("Vec0", *vec0, -1500, 1500);
-	float* vec1[3] = { &mNoiseParameter.vec1.x,&mNoiseParameter.vec1.y ,&mNoiseParameter.vec1.z };
-	ImGui::SliderFloat3("Vec1", *vec1,-1500,1500);
+	//float* vec0[3] = { &mNoiseParameter.vec0.x,&mNoiseParameter.vec0.y ,&mNoiseParameter.vec0.z };
+	//ImGui::SliderFloat3("Vec0", *vec0, -1500, 1500);
+	//float* vec1[3] = { &mNoiseParameter.vec1.x,&mNoiseParameter.vec1.y ,&mNoiseParameter.vec1.z };
+	//ImGui::SliderFloat3("Vec1", *vec1,-1500,1500);
+	float* startColor[4] = { &mCurlNoise.startColor.x,&mCurlNoise.startColor.y ,&mCurlNoise.startColor.z ,&mCurlNoise.startColor.w };
+	float* endColor[4] = { &mCurlNoise.endColor.x,&mCurlNoise.endColor.y ,&mCurlNoise.endColor.z ,&mCurlNoise.endColor.w };
+	ImGui::ColorEdit4("startColor", *startColor);
+	ImGui::ColorEdit4("endColor", *endColor);
 	//noiseSize
 	static bool normalizeFlag = false;
 	ImGui::Checkbox("noiseNormalizeFlag", &normalizeFlag);
@@ -143,3 +147,4 @@ void GpuCurlNoiseParticle::Update(ID3D11DeviceContext* context, float elapsd_tim
 	context->CSSetUnorderedAccessViews(0, ARRAYSIZE(uavs), uavs, nullptr);
 
 }
+

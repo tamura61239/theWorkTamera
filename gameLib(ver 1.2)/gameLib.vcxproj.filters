@@ -567,5 +567,8 @@
     <FxCompile Include="Source\gpu_curl_noise_particle_render_vs.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
+    <FxCompile Include="Source\bloomStart_ps.hlsl">
+      <Filter>gameLib\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
