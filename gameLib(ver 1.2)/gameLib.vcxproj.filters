@@ -195,9 +195,6 @@
     <ClCompile Include="Source\gpu_absorption_particle.cpp">
       <Filter>ソース ファイル\Gpu</Filter>
     </ClCompile>
-    <ClCompile Include="Source\gpu_2d_texture_particle.cpp">
-      <Filter>ソース ファイル\Gpu</Filter>
-    </ClCompile>
     <ClCompile Include="Source\gpu_particle_manager.cpp">
       <Filter>ソース ファイル\Gpu</Filter>
     </ClCompile>
@@ -205,6 +202,9 @@
       <Filter>ソース ファイル\Gpu</Filter>
     </ClCompile>
     <ClCompile Include="Source\gpu_curl_noise_particle.cpp">
+      <Filter>ソース ファイル\Gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\gpu_noise_geometric_particle.cpp">
       <Filter>ソース ファイル\Gpu</Filter>
     </ClCompile>
   </ItemGroup>
@@ -368,9 +368,6 @@
     <ClInclude Include="Source\character.h">
       <Filter>gameLib\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\gpu_2d_texture_particle.h">
-      <Filter>ヘッダー ファイル\Gpu</Filter>
-    </ClInclude>
     <ClInclude Include="Source\gpu_cube_particle.h">
       <Filter>ヘッダー ファイル\Gpu</Filter>
     </ClInclude>
@@ -396,6 +393,9 @@
       <Filter>ヘッダー ファイル\Gpu</Filter>
     </ClInclude>
     <ClInclude Include="Source\gpu_curl_noise_particle.h">
+      <Filter>ヘッダー ファイル\Gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\gpu_noise_geometric_particle.h">
       <Filter>ヘッダー ファイル\Gpu</Filter>
     </ClInclude>
   </ItemGroup>
@@ -447,6 +447,9 @@
     </None>
     <None Include="Source\curl_noise.hlsli">
       <Filter>シェーダー\Compute</Filter>
+    </None>
+    <None Include="Source\gpu_noise_geometric.hlsli">
+      <Filter>シェーダー</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -522,15 +525,6 @@
     <FxCompile Include="Source\gpu_particle_test_render_ps.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
-    <FxCompile Include="Source\gpu_particle_2d_test_render_vs.hlsl">
-      <Filter>シェーダー</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\gpu_particle_2d_test_render_ps.hlsl">
-      <Filter>シェーダー</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\2d_texture_particle_compute.hlsl">
-      <Filter>シェーダー\Compute</Filter>
-    </FxCompile>
     <FxCompile Include="Source\absorpartion_particle_compute.hlsl">
       <Filter>シェーダー\Compute</Filter>
     </FxCompile>
@@ -569,6 +563,18 @@
     </FxCompile>
     <FxCompile Include="Source\bloomStart_ps.hlsl">
       <Filter>gameLib\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\noise_geometric_particle.hlsl">
+      <Filter>シェーダー\Compute</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\gpu_noise_geometric_vs.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\gpu_noise_geometric_ps.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\gpu_noise_geometric_gs.hlsl">
+      <Filter>シェーダー</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
