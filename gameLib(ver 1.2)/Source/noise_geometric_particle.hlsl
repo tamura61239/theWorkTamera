@@ -39,15 +39,18 @@ void main( uint3 DTid : SV_DispatchThreadID )
 	float maxLife = asfloat(rwBuffer.Load(bufferIndex + 60));
 
 	//èâä˙âª
-	if (startIndex<index&&index< startIndex + indexSize)
+	if (startIndex<=index)
 	{
-		position.xyz = SetPosition(index);
-		position.w = 1;
-		velocity = normalize(position.xyz - startPosition)*0.01f;
-		color = startColor;
-		life = 0;
-		maxLife = setLife;
-		angle = float3(0, 0, 0);
+		if (index < startIndex + indexSize&&life>=maxLife)
+		{
+			position.xyz = SetPosition(index);
+			position.w = 1;
+			velocity = normalize(position.xyz - startPosition) * 0.01f;
+			color = startColor;
+			life = 0;
+			maxLife = setLife;
+			angle = float3(0, 0, 0);
+		}
 	}
 	//position.xyz = lerp(position.xyz, SetPosition(index), start);
 	life += timer;
