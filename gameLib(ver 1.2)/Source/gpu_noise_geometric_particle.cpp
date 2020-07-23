@@ -99,7 +99,7 @@ void GpuNoiseGeometricParticle::Update(ID3D11DeviceContext* context, float elaps
 	float* startPosition[3] = { &cbMoveDataBuffer.startPosition.x,&cbMoveDataBuffer.startPosition.y ,&cbMoveDataBuffer.startPosition.z };
 	ImGui::SliderFloat3("startPosition", *startPosition, -100, 100);
 	float* standardVelocity[3] = { &cbMoveDataBuffer.standardVelocity.x,&cbMoveDataBuffer.standardVelocity.y ,&cbMoveDataBuffer.standardVelocity.z };
-	ImGui::InputFloat3("standardVelocity", *standardVelocity, -10, 10);
+	ImGui::InputFloat3("standardVelocity", *standardVelocity);
 	float* angleSpeed[3] = { &cbMoveDataBuffer.angleSpeed.x,&cbMoveDataBuffer.angleSpeed.y ,&cbMoveDataBuffer.angleSpeed.z };
 	ImGui::SliderFloat3("angleSpeed", *angleSpeed, -3.14, 3.14);
 	float* startColor[4] = { &cbStartBuffer.startColor.x,&cbStartBuffer.startColor.y ,&cbStartBuffer.startColor.z,&cbStartBuffer.startColor.w };

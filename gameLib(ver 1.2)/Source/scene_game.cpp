@@ -35,7 +35,7 @@ SceneGame::SceneGame(ID3D11Device* device)
 			//knight
 			shadowMap = std::make_unique<FrameBuffer>(device, 1024 * 5, 1024 * 5, false/*enable_msaa*/, 1, DXGI_FORMAT_UNKNOWN/*not needed*/, DXGI_FORMAT_R32_TYPELESS);
 			frameBuffer[0] = std::make_unique<FrameBuffer>(device, 1920, 1080, true, 1, DXGI_FORMAT_R16G16B16A16_FLOAT, DXGI_FORMAT_R24G8_TYPELESS);
-			frameBuffer[1] = std::make_unique<FrameBuffer>(device, 1920, 1080, false/*enable_msaa*/, 1, DXGI_FORMAT_R16G16B16A16_FLOAT, DXGI_FORMAT_UNKNOWN);
+			frameBuffer[1] = std::make_unique<FrameBuffer>(device, 1920, 1080, true, 1, DXGI_FORMAT_R16G16B16A16_FLOAT, DXGI_FORMAT_R24G8_TYPELESS);
 			meshRender = std::make_unique<MeshRender>(device);
 			renderEffects = std::make_unique<RenderEffects>(device);
 			std::unique_ptr<ModelData>data = std::make_unique<ModelData>("Data/FBX/Knight/knight_attack03(v03).fbx", true);
@@ -186,7 +186,7 @@ void SceneGame::Render(ID3D11DeviceContext* context, float elapsed_time)
 	//{
 	//	meshRender->Render(context, obj->GetMesh(), obj->GetWorld());
 	//}
-	//meshRender->Render(context, staticObjs[1]->GetMesh(), staticObjs[1]->GetWorld(),VECTOR4F(0.1,0.1,0.1,1));
+	meshRender->Render(context, staticObjs[1]->GetMesh(), staticObjs[1]->GetWorld(),VECTOR4F(0.1,0.1,0.1,1));
 	meshRender->End(context);
 	//blend[0]->deactivate(context);
 	//blend[0]->activate(context);

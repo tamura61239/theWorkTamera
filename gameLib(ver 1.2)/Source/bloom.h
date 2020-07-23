@@ -17,13 +17,21 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState>mRasterizeState;
 	Microsoft::WRL::ComPtr<ID3D11SamplerState>mSamplerState;
 	Microsoft::WRL::ComPtr<ID3D11Buffer>mCBbuffer;
-	struct CbScene
+	Microsoft::WRL::ComPtr<ID3D11Buffer>mCbBluerbuffer;
+	struct CbBloom
 	{
 		float threshold;
 		float widthBlur;
 		float hightBlur;
 		float blurCount;
 	};
-	CbScene mCbuffer;
+	struct CbBluer
+	{
+		VECTOR4F mOffset[8];
+	};
+	float GaussianDistribution(const VECTOR2F& position, const float rho);
+	void CalucurateBluer(const float width,const float hight,const VECTOR2F& dir,const float deviation,const float multiply);
+	CbBloom mCbuffer;
+	CbBluer mCbBluer;
 	int count;
 };

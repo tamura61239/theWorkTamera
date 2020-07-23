@@ -19,6 +19,7 @@ public:
 	//getter
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>GetRenderTargetShaderResourceView() { return mRenderTargetShaderResourceView; }
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>GetDepthStencilShaderResourceView() { return mDepthStencilShaderResourceView; }
+	const D3D11_VIEWPORT& GetViewPort() { return viewport; }
 private:
 	//render target view data
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView>mRenderTargetView;
