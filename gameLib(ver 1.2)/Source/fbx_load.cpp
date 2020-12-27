@@ -492,6 +492,7 @@ void FbxLoader::BuildAnimations(FbxScene* fbx_scene, ModelData& data)
 		float sampling_time = 1.0f / sampling_rate;
 
 		FbxString* fbx_anim_stack_name = fbx_anim_stack_names.GetAt(fbx_animation_index);
+		animation.animName = fbx_anim_stack_name->Buffer();
 		FbxAnimStack* fbx_anim_stack = fbx_scene->FindMember<FbxAnimStack>(fbx_anim_stack_name->Buffer());
 
 		// 再生するアニメーションを指定する。

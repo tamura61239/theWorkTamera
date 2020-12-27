@@ -46,6 +46,9 @@
     <Filter Include="シェーダー\Compute">
       <UniqueIdentifier>{82bbbb93-1f45-4381-b909-9e5fcf655938}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダー\Render">
+      <UniqueIdentifier>{20854616-3498-45ad-890c-c672bbc18eef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External_Libraries\imgui\imgui.cpp">
@@ -205,6 +208,15 @@
       <Filter>ソース ファイル\Gpu</Filter>
     </ClCompile>
     <ClCompile Include="Source\gpu_noise_geometric_particle.cpp">
+      <Filter>ソース ファイル\Gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\gpu_static_mesh_particle.cpp">
+      <Filter>ソース ファイル\Gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\drow_shader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\gpu_skinned_mesh_particle.cpp">
       <Filter>ソース ファイル\Gpu</Filter>
     </ClCompile>
   </ItemGroup>
@@ -398,6 +410,18 @@
     <ClInclude Include="Source\gpu_noise_geometric_particle.h">
       <Filter>ヘッダー ファイル\Gpu</Filter>
     </ClInclude>
+    <ClInclude Include="Source\gpu_static_mesh_particle.h">
+      <Filter>ヘッダー ファイル\Gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\drow_shader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\gpu_skinned_mesh_particle.h">
+      <Filter>ヘッダー ファイル\Gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\vector_combo.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\board.hlsli">
@@ -450,6 +474,18 @@
     </None>
     <None Include="Source\gpu_noise_geometric.hlsli">
       <Filter>シェーダー</Filter>
+    </None>
+    <None Include="Source\particle_render.hlsli">
+      <Filter>シェーダー\Render</Filter>
+    </None>
+    <None Include="Source\gpu_static_mesh_particle.hlsli">
+      <Filter>シェーダー\Compute</Filter>
+    </None>
+    <None Include="Source\matrix_calculation.hlsli">
+      <Filter>シェーダー\Render</Filter>
+    </None>
+    <None Include="Source\gpu_skinned_mesh_particle.hlsli">
+      <Filter>シェーダー\Compute</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -575,6 +611,33 @@
     </FxCompile>
     <FxCompile Include="Source\gpu_noise_geometric_gs.hlsl">
       <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\gpu_static_mesh_create_particle_cs.hlsl">
+      <Filter>シェーダー\Compute</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\gpu_static_mesh_particle_cs.hlsl">
+      <Filter>シェーダー\Compute</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\particle_render_billboard_gs.hlsl">
+      <Filter>シェーダー\Render</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\particle_render_point_ps.hlsl">
+      <Filter>シェーダー\Render</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\particle_render_text_ps.hlsl">
+      <Filter>シェーダー\Render</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\particle_render_vs.hlsl">
+      <Filter>シェーダー\Render</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\gpu_skinned_mesh_create_praticle_cs.hlsl">
+      <Filter>シェーダー\Compute</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\gpu_skinned_mesh_particle_cs.hlsl">
+      <Filter>シェーダー\Compute</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\particle_render2.hlsl">
+      <Filter>シェーダー\Render</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

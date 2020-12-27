@@ -17,8 +17,13 @@ float4 main(VS_OUT pin) : SV_TARGET
 		//color += deffault_map.Sample(deffault_map_sampler, pin.texcoord + float2(offset[i] * widthBlur / width, 0)) * weight[i];
 		//color += deffault_map.Sample(deffault_map_sampler, pin.texcoord - float2(offset[i] * widthBlur / width, offset[i] * hightBlur / height)) * weight[i];
 		//color += deffault_map.Sample(deffault_map_sampler, pin.texcoord - float2(offset[i] * widthBlur / width, 0)) * weight[i];
-		color += offset[i].z * deffault_map.Sample(deffault_map_sampler, pin.texcoord + offset[i].xy);
-		color += offset[i].z * deffault_map.Sample(deffault_map_sampler, pin.texcoord - offset[i].xy);
+		//color += offset[i].z * deffault_map.Sample(deffault_map_sampler, pin.texcoord + offset[i].xy);
+		//color += offset[i].z * deffault_map.Sample(deffault_map_sampler, pin.texcoord - offset[i].xy);
+		color += offset[i].z * deffault_map.Sample(deffault_map_sampler, pin.texcoord + float2(offset[i].x, 0));
+		color += offset[i].z * deffault_map.Sample(deffault_map_sampler, pin.texcoord + float2(0, offset[i].y));
+		color += offset[i].z * deffault_map.Sample(deffault_map_sampler, pin.texcoord - float2(offset[i].x, 0));
+		color += offset[i].z * deffault_map.Sample(deffault_map_sampler, pin.texcoord - float2(0, offset[i].y));
+
 	}
 	color.w = 1.0f;
 	return color;

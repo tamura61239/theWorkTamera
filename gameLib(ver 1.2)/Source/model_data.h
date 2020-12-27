@@ -136,12 +136,14 @@ struct ModelData
 	};
 	struct Animation
 	{
+		std::string                 animName;
 		float						seconds_length;
 		std::vector<Keyframe>		keyframes;
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
 			archive(
+				animName,
 				seconds_length,
 				keyframes
 			);
@@ -169,5 +171,5 @@ struct ModelData
 			animations
 		);
 	}
-	ModelData(const char* filename,const bool textureFlag, int filetype = 0);
+	ModelData(const char* filename,const bool textureFlag = false, int filetype = 0);
 };

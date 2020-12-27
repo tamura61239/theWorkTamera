@@ -33,10 +33,13 @@ public:
 	const ModelResource* GetModelResource() const { return m_model_resource.get(); }
 
 private:
+	void BlendAnimation(float elapsed_time);
 	std::shared_ptr<ModelResource>	m_model_resource;
 	std::vector<Node>				m_nodes;
+	std::vector<Node>				mChangeSceneNodes;
 	int								m_current_animation = -1;
 	float							m_current_seconds = 0.0f;
 	bool							m_loop_animation = false;
 	bool							m_end_animation = false;
+	bool                            mChangeAnimation = true;
 };

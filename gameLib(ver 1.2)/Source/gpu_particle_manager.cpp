@@ -7,8 +7,11 @@
 #include"gpu_wing_particle.h"
 #include"gpu_curl_noise_particle.h"
 #include"gpu_noise_geometric_particle.h"
+#include"gpu_static_mesh_particle.h"
+#include"gpu_skinned_mesh_particle.h"
 #ifdef USE_IMGUI
 #include <imgui.h>
+#include"vector_combo.h"
 #endif
 
 GpuParticleManager::GpuParticleManager(ID3D11Device* device):particleNimber(0)
@@ -21,14 +24,9 @@ GpuParticleManager::GpuParticleManager(ID3D11Device* device):particleNimber(0)
 	particles.emplace_back(std::make_shared<GpuWingParticle>(device, 100000), "Wing");
 	particles.emplace_back(std::make_shared<GpuCurlNoiseParticle>(device, 100000), "CurlNoise");
 	particles.emplace_back(std::make_shared<GpuNoiseGeometricParticle>(device), "NoiseGeometric");
+	particles.emplace_back(std::make_shared<GpuStaticMeshParticle>(device, "Data/fbx/source/Dragon_ver2.fbx"), "StaticMesh");
+	particles.emplace_back(std::make_shared<GpuSkinnedMeshParticle>(device,"Data/fbx/anim_data.fbx"), "SkinnedMesh");
 }
-static auto vector_getter = [](void* vec, int idx, const char** out_text)
-{
-	auto& vector = *static_cast<std::vector<std::string>*>(vec);
-	if (idx < 0 || idx >= static_cast<int>(vector.size())) { return false; }
-	*out_text = vector.at(idx).c_str();
-	return true;
-};
 
 void GpuParticleManager::Update(ID3D11DeviceContext* context, float elapsd_time)
 {
