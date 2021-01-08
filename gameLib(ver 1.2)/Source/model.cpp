@@ -26,13 +26,14 @@ Model::Model(std::shared_ptr<ModelResource>& resource)
 }
 
 // アニメーション再生
-void Model::PlayAnimation(int animation_index, bool loop)
+void Model::PlayAnimation(int animation_index, bool loop, float changeTime)
 {
 	m_current_animation = animation_index;
 	m_loop_animation = loop;
 	m_end_animation = false;
 	m_current_seconds = 0.0f;
 	mChangeAnimation = true;
+	mChangeTime = changeTime;
 	memcpy(&mChangeSceneNodes[0], &m_nodes[0], sizeof(Node) * m_nodes.size());
 }
 
@@ -130,7 +131,7 @@ void Model::BlendAnimation(float elapsed_time)
 
 	const ModelData::Keyframe& keyframe = animation.keyframes.at(0);
 
-	float rate = (m_current_seconds / 0.2f);
+	float rate = (m_current_seconds / mChangeTime);
 
 	assert(m_nodes.size() == keyframe.node_keys.size());
 	assert(m_nodes.size() == mChangeSceneNodes.size());
@@ -161,7 +162,7 @@ void Model::BlendAnimation(float elapsed_time)
 	}
 
 	m_current_seconds += elapsed_time;
-	if (m_current_seconds > 0.2f)
+	if (m_current_seconds > mChangeTime)
 	{
 		m_current_seconds = 0.f;
 		mChangeAnimation = false;

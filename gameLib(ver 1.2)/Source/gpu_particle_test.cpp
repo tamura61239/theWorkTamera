@@ -15,7 +15,7 @@ GpuParticleTest::GpuParticleTest(ID3D11Device* device) :mMaxParticle(0),mVertexS
 	{
 		D3D11_RASTERIZER_DESC rasterizerDesc = {};
 		rasterizerDesc.FillMode = D3D11_FILL_SOLID; //D3D11_FILL_WIREFRAME, D3D11_FILL_SOLID
-		rasterizerDesc.CullMode = D3D11_CULL_BACK; //D3D11_CULL_NONE, D3D11_CULL_FRONT, D3D11_CULL_BACK   
+		rasterizerDesc.CullMode = D3D11_CULL_NONE; //D3D11_CULL_NONE, D3D11_CULL_FRONT, D3D11_CULL_BACK   
 		rasterizerDesc.FrontCounterClockwise = FALSE;
 		rasterizerDesc.DepthBias = 0;
 		rasterizerDesc.DepthBiasClamp = 0;
@@ -38,9 +38,9 @@ GpuParticleTest::GpuParticleTest(ID3D11Device* device) :mMaxParticle(0),mVertexS
 
 		//_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		D3D11_DEPTH_STENCIL_DESC depth_stencil_desc = {};
-		depth_stencil_desc.DepthEnable = false;
+		depth_stencil_desc.DepthEnable = true;
 		depth_stencil_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-		depth_stencil_desc.DepthFunc = D3D11_COMPARISON_LESS;
+		depth_stencil_desc.DepthFunc = D3D11_COMPARISON_NOT_EQUAL;
 		depth_stencil_desc.StencilEnable = false;
 		hr = device->CreateDepthStencilState(&depth_stencil_desc, mDepthStencilState.GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));

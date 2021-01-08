@@ -112,10 +112,18 @@ bool Framework::Initialize(HWND hwnd)
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 
+
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(mDevice.Get(), mDeviceContext.Get());
 
 	ImGui::StyleColorsDark();
+
+	ImGuiIO& io = ImGui::GetIO(); /*(void)io;*/
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+
+	//ImGui::StyleColorsClassic();
+	//io.Fonts->AddFontFromFileTTF("Data\\FiraCode-Retina.ttf", 12.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
+	io.Fonts->AddFontFromFileTTF("Data\\mplus-1p-regular.ttf", 17.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
 
 #endif
 	//sprites = std::make_unique<Sprite>(mDevice.Get(), L"Data/image/‚©‚ß‚ê‚¨‚ñ‚Ì”qŒ[.png");

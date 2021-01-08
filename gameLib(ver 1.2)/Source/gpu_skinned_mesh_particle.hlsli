@@ -18,6 +18,9 @@ cbuffer CbCreate : register(b0)
 {
     float startIndex;
     uint startColor;
+    float scale;
+    float life;
+    float speed;
 };
 cbuffer CbBone : register(b1)
 {
@@ -47,7 +50,7 @@ void WriteRenderBuffer(uint bufferIndex, RenderParticle p)
     bufferIndex += 4 * 4;
     renderBuffer.Store(bufferIndex, asuint(p.angle));
     bufferIndex += 4 * 1;
-    renderBuffer.Store(bufferIndex, asuint(p.color));
+    renderBuffer.Store(bufferIndex, p.color);
     bufferIndex += 4 * 1;
     renderBuffer.Store3(bufferIndex, asuint(p.velocity));
     bufferIndex += 4 * 3;

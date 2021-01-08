@@ -11,7 +11,7 @@ float4 main(VS_OUT pin) : SV_TARGET
 
 	float3 E = normalize(eyePosition.xyz - pin.worldPosition.xyz);
 
-	float3 L = normalize(-lightDirection.xyz);
+	float3 L = normalize(lightDirection.xyz);
 	//ŠÂ‹«Œõ
 	float3 A = ambientColor.rgb/**HemiSphereLight(pin.worldNormal, skyColor, groundColor)*/;
 	//ŠgŽU”½ŽË
@@ -60,6 +60,6 @@ float4 main(VS_OUT pin) : SV_TARGET
 		//‹¾–ÊŒõ‚Ì‰ÁŽZ
 		LS += BlinnPhongSpcular(pin.worldNormal, -LV, LC, E, Ks, 20) * influence * influence * influence2;
 	}
-	color *= pin.color * float4(A + D + S + LD + LS, 1.0);
+	color *= pin.color * float4(A + D + S/* + LD + LS*/, 1.0);
 	return color;
 }

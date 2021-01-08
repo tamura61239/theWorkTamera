@@ -487,6 +487,9 @@
     <None Include="Source\gpu_skinned_mesh_particle.hlsli">
       <Filter>シェーダー\Compute</Filter>
     </None>
+    <None Include="Source\rand_function.hlsli">
+      <Filter>シェーダー\Compute</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Source\board_ps.hlsl">
@@ -637,6 +640,9 @@
       <Filter>シェーダー\Compute</Filter>
     </FxCompile>
     <FxCompile Include="Source\particle_render2.hlsl">
+      <Filter>シェーダー\Render</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\particle_render_ps.hlsl">
       <Filter>シェーダー\Render</Filter>
     </FxCompile>
   </ItemGroup>

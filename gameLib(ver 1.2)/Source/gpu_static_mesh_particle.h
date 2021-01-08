@@ -14,7 +14,8 @@ public:
 	void Render(ID3D11DeviceContext* context, const FLOAT4X4& view, const FLOAT4X4& projection);
 private:
 	void CreateBuffer(ID3D11Device* device, StaticMesh* mesh);
-	
+	std::unique_ptr<StaticMesh>mMesh;
+	std::unique_ptr<MeshRender>mRender;
 	struct Mesh
 	{
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>mMeshBuffer;

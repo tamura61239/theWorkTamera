@@ -2,6 +2,7 @@
 #include"misc.h"
 #include"shader.h"
 #include"texture.h"
+#include"light.h"
 #ifdef USE_IMGUI
 #include<imgui.h>
 #endif
@@ -15,17 +16,18 @@ GpuStaticMeshParticle::GpuStaticMeshParticle(ID3D11Device* device, const char* f
 	mCbCreate.startIndex = 0;
 	mCreateTime = 1;
 	mTimer = 0;
-	std::unique_ptr<StaticMesh>mesh = std::make_unique<StaticMesh>(device, fileName);
-	CreateBuffer(device, mesh.get());
+	mMesh = std::make_unique<StaticMesh>(device, fileName);
+	mRender = std::make_unique<MeshRender>(device);
+	CreateBuffer(device, mMesh.get());
 }
 
 GpuStaticMeshParticle::GpuStaticMeshParticle(ID3D11Device* device, StaticMesh* mesh) :GpuParticleTest(device)
 {
-	mCbCreate.color = VECTOR3F(1, 1, 1);
-	mCbCreate.startIndex = 0;
-	mCreateTime = 1;
-	mTimer = 0;
-	CreateBuffer(device, mesh);
+	//mCbCreate.color = VECTOR3F(1, 1, 1);
+	//mCbCreate.startIndex = 0;
+	//mCreateTime = 1;
+	//mTimer = 0;
+	//CreateBuffer(device, mesh);
 }
 
 void GpuStaticMeshParticle::CreateBuffer(ID3D11Device* device, StaticMesh* mesh)
@@ -186,7 +188,7 @@ void GpuStaticMeshParticle::CreateBuffer(ID3D11Device* device, StaticMesh* mesh)
 		{"VELOCITY",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
 		{"SCALE",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
 	};
-	mShader = std::make_unique<DrowShader>(device, "Data/shader/particle_render_vs.cso", "", "Data/shader/particle_render_point_ps.cso", inputElementDesc, ARRAYSIZE(inputElementDesc));
+	mShader = std::make_unique<DrowShader>(device, "Data/shader/particle_render_vs.cso", "Data/shader/particle_render_billboard_gs.cso", "Data/shader/particle_render_ps.cso", inputElementDesc, ARRAYSIZE(inputElementDesc));
 	D3D11_TEXTURE2D_DESC desc;
 	hr = load_texture_from_file(device, L"Data/image/›.png", mTexturte.GetAddressOf(), &desc);
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
@@ -333,6 +335,8 @@ void GpuStaticMeshParticle::Render(ID3D11DeviceContext* context, const FLOAT4X4&
 	context->IASetVertexBuffers(0, ARRAYSIZE(vbs), vbs, &stride, &offset);
 	context->PSSetShaderResources(0, 0, nullptr);
 
-
+	mRender->Begin(context, pLight.GetLightDirection(), view, projection);
+	mRender->Render(context, mMesh.get(), mObj->GetWorld());
+	mRender->End(context);
 }
 

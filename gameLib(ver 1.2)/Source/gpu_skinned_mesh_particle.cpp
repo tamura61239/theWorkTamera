@@ -2,6 +2,7 @@
 #include"misc.h"
 #include"shader.h"
 #include"texture.h"
+#include"light.h"
 #ifdef USE_IMGUI
 #include<imgui.h>
 #include"vector_combo.h"
@@ -15,26 +16,31 @@ GpuSkinnedMeshParticle::GpuSkinnedMeshParticle(ID3D11Device* device, const char*
 	std::unique_ptr<ModelData>modelData = std::make_unique<ModelData>(fileName);
 	std::shared_ptr<ModelResource>resouce = std::make_shared<ModelResource>(device, std::move(modelData));
 	mModel = std::make_unique<Model>(resouce);
+	mRender = std::make_unique<ModelRenderer>(device);
 	CreateBuffer(device);
 	mAnimNo = 0;
 	mModel->PlayAnimation(mAnimNo, true);
 	mCreateTime = 1;
 	mTimer = 0;
 	mCbCreate.startIndex = 0;
+	mDrowModel = false;
 
 }
 
 GpuSkinnedMeshParticle::GpuSkinnedMeshParticle(ID3D11Device* device, std::shared_ptr<ModelResource>& resource) : GpuParticleTest(device)
 {
 	mModel = std::make_unique<Model>(resource);
+	mRender = std::make_unique<ModelRenderer>(device);
 	CreateBuffer(device);
 	mAnimNo = 0;
 	mModel->PlayAnimation(mAnimNo, true);
 	mCreateTime = 1;
 	mTimer = 0;
 	mCbCreate.startIndex = 0;
-}
+	mDrowModel = false;
 
+}
+/***************************バッファなどの生成****************************/
 void GpuSkinnedMeshParticle::CreateBuffer(ID3D11Device* device)
 {
 	HRESULT hr;
@@ -102,7 +108,7 @@ void GpuSkinnedMeshParticle::CreateBuffer(ID3D11Device* device)
 		mMeshs.push_back(meshData);
 	}
 	int count = totalIndex / 10000;
-	mMaxParticle = 50000 * (count + 1);
+	mMaxParticle = 500000 * (count + 1);
 	//パーティクルのバッファ
 	{
 		Microsoft::WRL::ComPtr<ID3D11Buffer>particleBuffer;
@@ -123,6 +129,8 @@ void GpuSkinnedMeshParticle::CreateBuffer(ID3D11Device* device)
 
 			particles.resize(mMaxParticle);
 			//deactiveParticles.resize(mMaxParticle);
+			memset(particles.data(), 0, sizeof(Particle) * mMaxParticle);
+
 			data.pSysMem = &particles[0];
 
 			hr = device->CreateBuffer(&desc, &data, particleBuffer.GetAddressOf());
@@ -139,6 +147,7 @@ void GpuSkinnedMeshParticle::CreateBuffer(ID3D11Device* device)
 			desc.StructureByteStride = 0;
 			std::vector<RenderParticle>renderParticles;
 			renderParticles.resize(mMaxParticle);
+			memset(renderParticles.data(), 0, sizeof(RenderParticle) * mMaxParticle);
 			data.pSysMem = &renderParticles[0];
 			hr = device->CreateBuffer(&desc, &data, mRenderBuffer.GetAddressOf());
 			_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
@@ -198,10 +207,13 @@ void GpuSkinnedMeshParticle::CreateBuffer(ID3D11Device* device)
 		{"VELOCITY",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
 		{"SCALE",0,DXGI_FORMAT_R32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
 	};
-	mShader = std::make_unique<DrowShader>(device, "Data/shader/particle_render2.cso", "", "Data/shader/particle_render_point_ps.cso", inputElementDesc, ARRAYSIZE(inputElementDesc));
+	mShader = std::make_unique<DrowShader>(device, "Data/shader/particle_render2.cso", "Data/shader/particle_render_billboard_gs.cso", "Data/shader/particle_render_text_ps.cso", inputElementDesc, ARRAYSIZE(inputElementDesc));
 	D3D11_TEXTURE2D_DESC desc;
 	hr = load_texture_from_file(device, L"Data/image/○.png", mTexturte.GetAddressOf(), &desc);
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+	mCbCreate.scale = 0.1f;
+	mCbCreate.life = 0.2f;
+	mCbCreate.speed = 5.f;
 
 }
 /**************************************************/
@@ -228,6 +240,9 @@ void GpuSkinnedMeshParticle::ImGuiUpdate()
 	ImGui::DragFloat3("angle", *angleF);
 	mObj->SetAngle(angle);
 	ImGui::Text("index%f", mCbCreate.startIndex);
+	ImGui::InputFloat("life", &mCbCreate.life, 0.05f);
+	ImGui::InputFloat("speed", &mCbCreate.speed, 0.1f);
+	ImGui::InputFloat("scale", &mCbCreate.scale, 0.01f);
 	std::vector<std::string>animName;
 	for (auto& anime : mModel->GetModelResource()->GetAnimations())
 	{
@@ -239,6 +254,7 @@ void GpuSkinnedMeshParticle::ImGuiUpdate()
 	{
 		mModel->PlayAnimation(mAnimNo, true);
 	}
+	ImGui::Checkbox(u8"モデル描画", &mDrowModel);
 	ImGui::End();
 #endif
 }
@@ -272,6 +288,7 @@ void GpuSkinnedMeshParticle::Update(ID3D11DeviceContext* context, float elapsdTi
 	//生成
 	if (mTimer > mCreateTime)
 	{
+		//カラー情報をuint型に圧縮 (float4 → uint)
 		mCbCreate.color = 0;
 		mCbCreate.color |= (static_cast<UINT>(mEditorColor[0] * 255) & 0x00FFFFFF) << 24;
 		mCbCreate.color |= (static_cast<UINT>(mEditorColor[1] * 255) & 0x00FFFFFF) << 16;
@@ -281,10 +298,11 @@ void GpuSkinnedMeshParticle::Update(ID3D11DeviceContext* context, float elapsdTi
 
 		const ModelResource* resource = mModel->GetModelResource();
 		const std::vector<Model::Node>& nodes = mModel->GetNodes();
-
+		//Meshの数分生成
 		for (int j = 0; j < mMeshs.size(); j++)
 		{
 			auto& mesh = resource->GetMeshes()[j];
+			//ボーンの計算
 			CbBone cbBone;
 			::memset(&cbBone, 0, sizeof(cbBone));
 			if (mesh.node_indices.size() > 0)
@@ -306,12 +324,14 @@ void GpuSkinnedMeshParticle::Update(ID3D11DeviceContext* context, float elapsdTi
 			{
 				mCbCreate.startIndex = 0;
 			}
+			//計算したボーンなどを定数バッファとして転送する
 			context->UpdateSubresource(mCbCreateBuffer.Get(), 0, 0, &mCbCreate, 0, 0);
 			context->UpdateSubresource(mCbBoneBuffer.Get(), 0, 0, &cbBone, 0, 0);
 
 			srv[0] = mesh2.mMeshBuffer.Get();
 			srv[1] = mesh2.mIndexBuffer.Get();
 			context->CSSetShaderResources(0, ARRAYSIZE(srv), srv);
+			//Meshの index/3 (メッシュの数) 分回す
 			context->Dispatch(mesh2.indexSize/3, 1, 1);
 			mCbCreate.startIndex += mesh2.indexSize/3;
 		}
@@ -349,6 +369,7 @@ void GpuSkinnedMeshParticle::Update(ID3D11DeviceContext* context, float elapsdTi
 
 void GpuSkinnedMeshParticle::Render(ID3D11DeviceContext* context, const FLOAT4X4& view, const FLOAT4X4& projection)
 {
+	//パーティクルの描画
 	ID3D11Buffer* constant_buffers[] =
 	{
 		mCbSceneBuffer.Get(),
@@ -364,7 +385,6 @@ void GpuSkinnedMeshParticle::Render(ID3D11DeviceContext* context, const FLOAT4X4
 	cbScene.projection = projection;
 	context->UpdateSubresource(mCbSceneBuffer.Get(), 0, 0, &cbScene, 0, 0);
 	mShader->Activate(context);
-	context->IASetInputLayout(mInput.Get());
 
 	UINT stride = sizeof(RenderParticle);
 	UINT offset = 0;
@@ -375,12 +395,20 @@ void GpuSkinnedMeshParticle::Render(ID3D11DeviceContext* context, const FLOAT4X4
 	context->IASetVertexBuffers(0, ARRAYSIZE(vbs), vbs, &stride, &offset);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 	context->PSSetShaderResources(0, 1, mTexturte.GetAddressOf());
+	context->PSSetSamplers(0, 1, mSamplerState.GetAddressOf());
 	context->Draw(mMaxParticle, 0);
 	mShader->Deactivate(context);
-
+	//セットしたデータのクリア
 	vbs[0] = nullptr;
 	context->IASetVertexBuffers(0, ARRAYSIZE(vbs), vbs, &stride, &offset);
 	context->PSSetShaderResources(0, 0, nullptr);
+	//モデルの描画
+	if (!mDrowModel)return;
+	FLOAT4X4 viewProjection;
+	DirectX::XMStoreFloat4x4(&viewProjection, DirectX::XMLoadFloat4x4(&view) * DirectX::XMLoadFloat4x4(&projection));
+	mRender->Begin(context, viewProjection, pLight.GetLightDirection());
+	mRender->Draw(context, *mModel.get(), VECTOR4F(0.25, 0.25, 0.25, 1));
+	mRender->End(context);
 
 }
 

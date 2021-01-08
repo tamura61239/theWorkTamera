@@ -3,6 +3,7 @@
 #include<vector>
 #include"drow_shader.h"
 #include"gpu_particle_test.h"
+#include"model_renderer.h"
 
 class GpuSkinnedMeshParticle :public GpuParticleTest
 {
@@ -23,6 +24,7 @@ private:
 		UINT color;
 	};
 	std::unique_ptr<Model>mModel;
+	std::unique_ptr<ModelRenderer>mRender;
 	float mEditorColor[4] = { 1,1,1,1 };
 	struct RenderParticle
 	{
@@ -42,7 +44,10 @@ private:
 	{
 		float startIndex;
 		UINT color;
-		VECTOR2F dummy;
+		float scale;
+		float life;
+		float speed;
+		VECTOR3F dummy;
 	};
 	struct CbBone
 	{
@@ -73,4 +78,5 @@ private:
 	float mTimer;
 	CbCreate mCbCreate;
 	int mAnimNo;
+	bool mDrowModel;
 };

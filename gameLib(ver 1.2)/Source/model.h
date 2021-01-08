@@ -22,7 +22,7 @@ public:
 
 	// アニメーション
 	bool IsPlayAnimation() const { return m_current_animation >= 0; }
-	void PlayAnimation(int animation_index, bool loop = false);
+	void PlayAnimation(int animation_index, bool loop = false,float changeTime=0.2f);
 	void UpdateAnimation(float elapsed_time);
 
 	// 行列計算
@@ -42,4 +42,5 @@ private:
 	bool							m_loop_animation = false;
 	bool							m_end_animation = false;
 	bool                            mChangeAnimation = true;
+	float                           mChangeTime = 0.f;
 };
