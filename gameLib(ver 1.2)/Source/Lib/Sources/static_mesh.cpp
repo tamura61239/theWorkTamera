@@ -547,7 +547,7 @@ MeshRender::MeshRender(ID3D11Device* device)
 		};
 		mShader.push_back(std::make_unique<DrowShader>(device, "Data/shader/static_mesh_vs.cso", "", "Data/shader/static_mesh_ps.cso", inputElementDesc, ARRAYSIZE(inputElementDesc)));
 		mShader.push_back(std::make_unique<DrowShader>(device, "Data/shader/static_mesh_normal_vs.cso", "", "Data/shader/static_mesh_normal_ps.cso", inputElementDesc, ARRAYSIZE(inputElementDesc)));
-		mShader.push_back(std::make_unique<DrowShader>(device, "Data/shader/static_mesh_motion_data_vs.cso", "Data/shader/static_mesh_motion_data_gs.cso", "Data/shader/static_mesh_motion_data_ps.cso", inputElementDesc, ARRAYSIZE(inputElementDesc)));
+		//mShader.push_back(std::make_unique<DrowShader>(device, "Data/shader/static_mesh_motion_data_vs.cso", "Data/shader/static_mesh_motion_data_gs.cso", "Data/shader/static_mesh_motion_data_ps.cso", inputElementDesc, ARRAYSIZE(inputElementDesc)));
 		mShadowShader = std::make_unique<DrowShader>(device, "Data/shader/static_mesh_shadow_vs.cso", "", "Data/shader/static_mesh_shadow_ps.cso");
 	}
 

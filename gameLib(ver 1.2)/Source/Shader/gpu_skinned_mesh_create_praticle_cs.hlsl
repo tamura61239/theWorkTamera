@@ -1,5 +1,5 @@
 #include"gpu_skinned_mesh_particle.hlsli"
-#include"Lib/rand_function.hlsli"
+#include"../Lib/Shader/rand_function.hlsli"
 [numthreads(1, 1, 1)]
 void main( uint3 DTid : SV_DispatchThreadID )
 {

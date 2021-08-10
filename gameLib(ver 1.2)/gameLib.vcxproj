@@ -200,6 +200,8 @@
     <ClCompile Include="Source\Lib\Sources\texture.cpp" />
     <ClCompile Include="Source\Lib\Sources\vector.cpp" />
     <ClCompile Include="Source\Lib\Sources\x_input.cpp" />
+    <ClCompile Include="Source\Sources\color_anim.cpp" />
+    <ClCompile Include="Source\Sources\cs_buffer.cpp" />
     <ClCompile Include="Source\Sources\gpu_absorption_particle.cpp" />
     <ClCompile Include="Source\Sources\gpu_cloud_particle.cpp" />
     <ClCompile Include="Source\Sources\gpu_cube_particle.cpp" />
@@ -212,15 +214,10 @@
     <ClCompile Include="Source\Sources\gpu_static_mesh_particle.cpp" />
     <ClCompile Include="Source\Sources\gpu_swirl_particle.cpp" />
     <ClCompile Include="Source\Sources\gpu_wing_particle.cpp" />
-    <ClCompile Include="Source\Sources\particle_buffer.cpp" />
     <ClCompile Include="Source\Sources\particle_move.cpp" />
     <ClCompile Include="Source\Sources\player.cpp" />
-    <ClCompile Include="Source\Sources\scene_clear.cpp" />
-    <ClCompile Include="Source\Sources\scene_game.cpp" />
     <ClCompile Include="Source\Sources\scene_manager.cpp" />
-    <ClCompile Include="Source\Sources\scene_over.cpp" />
     <ClCompile Include="Source\Sources\scene_particle_editor.cpp" />
-    <ClCompile Include="Source\Sources\scene_title.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External_Libraries\imgui\imconfig.h" />
@@ -231,6 +228,8 @@
     <ClInclude Include="External_Libraries\imgui\imstb_rectpack.h" />
     <ClInclude Include="External_Libraries\imgui\imstb_textedit.h" />
     <ClInclude Include="External_Libraries\imgui\imstb_truetype.h" />
+    <ClInclude Include="Source\Headers\color_anim.h" />
+    <ClInclude Include="Source\Headers\cs_buffer.h" />
     <ClInclude Include="Source\Headers\gpu_absorption_particle.h" />
     <ClInclude Include="Source\Headers\gpu_cloud_particle.h" />
     <ClInclude Include="Source\Headers\gpu_cube_particle.h" />
@@ -243,17 +242,11 @@
     <ClInclude Include="Source\Headers\gpu_static_mesh_particle.h" />
     <ClInclude Include="Source\Headers\gpu_swirl_particle.h" />
     <ClInclude Include="Source\Headers\gpu_wing_particle.h" />
-    <ClInclude Include="Source\Headers\particle_buffer.h" />
     <ClInclude Include="Source\Headers\particle_move.h" />
     <ClInclude Include="Source\Headers\player.h" />
     <ClInclude Include="Source\Headers\scene.h" />
-    <ClInclude Include="Source\Headers\scene_clear.h" />
-    <ClInclude Include="Source\Headers\scene_game.h" />
     <ClInclude Include="Source\Headers\scene_manager.h" />
-    <ClInclude Include="Source\Headers\scene_over.h" />
     <ClInclude Include="Source\Headers\scene_particle_editor.h" />
-    <ClInclude Include="Source\Headers\scene_title.h" />
-    <ClInclude Include="Source\Headers\vector_combo.h" />
     <ClInclude Include="Source\Lib\Headers\blend_state.h" />
     <ClInclude Include="Source\Lib\Headers\bloom.h" />
     <ClInclude Include="Source\Lib\Headers\board.h" />
@@ -306,34 +299,169 @@
     <ClInclude Include="Source\Lib\Headers\zoom_blur_parameter.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Source\Lib\Shader\bloom.hlsli" />
+    <None Include="Source\Lib\Shader\board.hlsli" />
+    <None Include="Source\Lib\Shader\deferred_depth_static_mesh.hlsli" />
+    <None Include="Source\Lib\Shader\depth_of_field_data.hlsli" />
+    <None Include="Source\Lib\Shader\geometric_primitive.hlsli" />
+    <None Include="Source\Lib\Shader\lightType.hlsli" />
+    <None Include="Source\Lib\Shader\model.hlsli" />
+    <None Include="Source\Lib\Shader\model_normal.hlsli" />
+    <None Include="Source\Lib\Shader\ps_function.hlsli" />
+    <None Include="Source\Lib\Shader\rand_function.hlsli" />
+    <None Include="Source\Lib\Shader\render_effects.hlsli" />
+    <None Include="Source\Lib\Shader\sky_map.hlsli" />
+    <None Include="Source\Lib\Shader\sprite.hlsli" />
+    <None Include="Source\Lib\Shader\static_mesh.hlsli" />
+    <None Include="Source\Lib\Shader\static_mesh_normal.hlsli" />
+    <None Include="Source\Lib\Shader\zoom_blur.hlsli" />
+    <None Include="Source\Shader\color_conversion.hlsli" />
     <None Include="Source\Shader\curl_noise.hlsli" />
     <None Include="Source\Shader\gpu_cloud_particle_render.hlsli" />
     <None Include="Source\Shader\gpu_noise_geometric.hlsli" />
     <None Include="Source\Shader\gpu_particle_test_render.hlsli" />
     <None Include="Source\Shader\gpu_skinned_mesh_particle.hlsli" />
     <None Include="Source\Shader\gpu_static_mesh_particle.hlsli" />
-    <None Include="Source\Shader\Lib\bloom.hlsli" />
-    <None Include="Source\Shader\Lib\board.hlsli" />
-    <None Include="Source\Shader\Lib\deferred_depth_static_mesh.hlsli" />
-    <None Include="Source\Shader\Lib\depth_of_field_data.hlsli" />
-    <None Include="Source\Shader\Lib\geometric_primitive.hlsli" />
-    <None Include="Source\Shader\Lib\lightType.hlsli" />
-    <None Include="Source\Shader\Lib\model.hlsli" />
-    <None Include="Source\Shader\Lib\model_normal.hlsli" />
-    <None Include="Source\Shader\Lib\ps_function.hlsli" />
-    <None Include="Source\Shader\Lib\rand_function.hlsli" />
-    <None Include="Source\Shader\Lib\render_effects.hlsli" />
-    <None Include="Source\Shader\Lib\sky_map.hlsli" />
-    <None Include="Source\Shader\Lib\sprite.hlsli" />
-    <None Include="Source\Shader\Lib\static_mesh.hlsli" />
-    <None Include="Source\Shader\Lib\static_mesh_normal.hlsli" />
-    <None Include="Source\Shader\Lib\zoom_blur.hlsli" />
     <None Include="Source\Shader\matrix_calculation.hlsli" />
+    <None Include="Source\Shader\particle_count_buffer.hlsli" />
     <None Include="Source\Shader\particle_data.hlsli" />
     <None Include="Source\Shader\particle_render.hlsli" />
+    <None Include="Source\Shader\render_particle_cube.hlsli" />
     <None Include="Source\Shader\swirl.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Source\Lib\Shader\bloomStart_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\bloom_blur01_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\bloom_blur02_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\bloom_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\board_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\board_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\combined_bloom.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\deferred_depth_model_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\deferred_depth_sky_map_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\deferred_depth_static_mesh_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\deferred_depth_static_mesh_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\depth_of_field_synthetic_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\geometric_primitive_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\geometric_primitive_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\model_normal_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\model_normal_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\model_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\model_shadow_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\model_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\motion_blur_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\render_effects_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\render_effects_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\sky_map_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\sky_map_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\sprite_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\sprite_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\static_mesh_normal_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\static_mesh_normal_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\static_mesh_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\static_mesh_shadow_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\static_mesh_shadow_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\static_mesh_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Lib\Shader\zoom_blur_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
     <FxCompile Include="Source\Shader\absorpartion_particle_compute.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
@@ -406,138 +534,6 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\bloomStart_ps.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\bloom_blur01_ps.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\bloom_blur02_ps.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\bloom_vs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\board_ps.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\board_vs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\combined_bloom.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\deferred_depth_model_ps.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\deferred_depth_sky_map_ps.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\deferred_depth_static_mesh_ps.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\deferred_depth_static_mesh_vs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\depth_of_field_synthetic_ps.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\geometric_primitive_ps.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\geometric_primitive_vs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\model_normal_ps.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\model_normal_vs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\model_ps.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\model_shadow_vs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\model_vs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\motion_blur_ps.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\render_effects_ps.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\render_effects_vs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\sky_map_ps.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\sky_map_vs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\sprite_ps.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\sprite_vs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\static_mesh_normal_ps.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\static_mesh_normal_vs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\static_mesh_ps.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\static_mesh_shadow_ps.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\static_mesh_shadow_vs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\static_mesh_vs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Lib\zoom_blur_ps.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-    </FxCompile>
     <FxCompile Include="Source\Shader\noise_geometric_particle.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
@@ -553,10 +549,6 @@
     <FxCompile Include="Source\Shader\particle_last_move.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\particle_render2.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Source\Shader\particle_render_billboard_gs.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>

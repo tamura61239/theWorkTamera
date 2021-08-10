@@ -54,7 +54,7 @@ private:
 		float multiply;
 		int count;
 	};
-	EditorData mEditorData[4];
+	EditorData mEditorData;
 	int mNowEditorNo;
 	//描画用データ
 	std::vector<std::unique_ptr<FrameBuffer>>mFrameBuffer;

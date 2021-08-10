@@ -4,10 +4,13 @@
 #include"obj3d.h"
 #include<memory>
 #include<string>
-#include"particle_buffer.h"
+#include"cs_buffer.h"
 #include"constant_buffer.h"
 #include"particle_move.h"
+
 #include<vector>
+#include <functional>
+#include"drow_shader.h"
 #define PARTICLE_SYSTEM_TYPE 1
 
 #if (PARTICLE_SYSTEM_TYPE==0)
@@ -60,13 +63,23 @@ protected:
 class GpuParticle
 {
 public:
+	//コンストラクタ
 	GpuParticle(ID3D11Device* device, std::string name,std::string fileName = "");
-	virtual void Editor();
-	virtual void Update(ID3D11DeviceContext* context);
+	//エディタ
+
+	virtual void Editor(std::vector<std::string>shaders,std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>texs);
+	//更新
+	virtual void Update(ID3D11DeviceContext* context,float elapsdTime);
+	//描画
 	virtual void Render(ID3D11DeviceContext* context);
+	//getter
 	std::string GetName() { return mName; }
 	std::string GetFilePath() { return mFilePath; }
+	const int GetDrowType() { return mDrowType; }
+	const int GetTexNo() { return mTexNo; }
 protected:
+	void DrowEditorFunction(void* id, std::vector<std::string>shaders, std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>texs);
+	//パーティクルデータ
 	struct ParticleData
 	{
 		VECTOR3F position;
@@ -79,11 +92,11 @@ protected:
 	};
 	struct RenderParticle
 	{
-		VECTOR3F position;
-		VECTOR3F scale;
+		VECTOR4F position;
 		VECTOR3F angle;
+		VECTOR4F color;
 		VECTOR3F velocity;
-		UINT color;
+		VECTOR3F scale;
 	};
 	struct ParticleCount
 	{
@@ -93,11 +106,11 @@ protected:
 		UINT dummy;
 	};
 	//バッファ
-	std::unique_ptr<ParticleBuffer>mParticle;
-	std::unique_ptr<ParticleBuffer>mRender;
-	std::unique_ptr<ParticleBuffer>mCount;
-	std::unique_ptr<ParticleBuffer>mIndex[2];
-	std::unique_ptr<ParticleBuffer>mDeathIndex;
+	std::unique_ptr<CSBuffer>mParticle;
+	std::unique_ptr<CSBuffer>mRender;
+	std::unique_ptr<CSBuffer>mCount;
+	std::unique_ptr<CSBuffer>mIndex[2];
+	std::unique_ptr<CSBuffer>mDeathIndex;
 	//シェーダー
 	Microsoft::WRL::ComPtr<ID3D11ComputeShader>mCresteShader;
 	Microsoft::WRL::ComPtr<ID3D11ComputeShader>mLastMoveShader;
@@ -105,14 +118,14 @@ protected:
 	//変数
 	UINT mParticleCount;
 	UINT mMaxParticle;
-	UINT mCreateCount;
+	int mCreateCount;
 	UINT mIndexCount;
 	int mCountCrease;
-	enum class RenderObjType
-	{
-		point,board,texture,cube,
-	};
+	int mDrowType;
+	int mTexNo;
+	//パーティクルの動き
 	std::vector<std::unique_ptr<ParticleMove>>mMoves;
+	//名前
 	std::string mName;
 	std::string mFilePath;
 private:
@@ -126,8 +139,139 @@ private:
 		float accel;
 		VECTOR3F dummy;
 	};
-
+	struct CbTimer
+	{
+		float elapsdTime;
+		VECTOR3F dummy;
+	};
 	//定数バッファ
 	std::unique_ptr<ConstantBuffer<CreateData>>mCreateData;
+	std::unique_ptr<ConstantBuffer<CbTimer>>mCbTimer;
 };
+//class TitleParticle
+//{
+//public:
+//	TitleParticle(ID3D11Device* device);
+//	void Editor();
+//	void Update(float elapsdTime, ID3D11DeviceContext* context);
+//	void Render(ID3D11DeviceContext* context);
+//	void SetChangeFlag(const bool changeFlag) { mSceneChange = changeFlag; }
+//private:
+//	//パーティクルバッファ
+//	std::unique_ptr<CSBuffer>mParticle;
+//	std::unique_ptr<CSBuffer>mParticleCount;
+//	//描画用バッファ
+//	std::unique_ptr<CSBuffer>mParticleRender;
+//	std::unique_ptr<CSBuffer>mParticleIndexs[2];
+//	std::unique_ptr<CSBuffer>mParticleDeleteIndex;
+//	//シェーダー
+//	Microsoft::WRL::ComPtr<ID3D11ComputeShader>mCreateShader;
+//	Microsoft::WRL::ComPtr<ID3D11ComputeShader>mCSShader;
+//	Microsoft::WRL::ComPtr<ID3D11ComputeShader>mSceneChangeCSShader;
+//	Microsoft::WRL::ComPtr<ID3D11ComputeShader>mRenderSetCSShader;
+//	Microsoft::WRL::ComPtr<ID3D11ComputeShader>mCSCountShader;
+//	std::unique_ptr<DrowShader>mShader;
+//	//srv
+//	std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>mParticleSRV;
+//	//パーティクルのデータ
+//	struct Particle
+//	{
+//		VECTOR3F position;
+//		VECTOR3F scale;
+//		VECTOR3F velocity;
+//		VECTOR3F angle;
+//		VECTOR4F color;
+//		float speed;
+//		float life;
+//		float moveAngle;
+//		float moveAngleMovement;
+//		float moveAngleLength;
+//		float maxLife;
+//		VECTOR3F defVelocity;
+//		VECTOR3F startPosition;
+//		VECTOR3F defPosition;
+//
+//	};
+//	struct RenderParticle
+//	{
+//		VECTOR4F position;
+//		VECTOR3F angle;
+//		VECTOR4F color;
+//		VECTOR3F velocity;
+//		VECTOR3F scale;
+//	};
+//	struct ParticleCount
+//	{
+//		UINT aliveParticleCount;
+//		UINT aliveNewParticleCount;
+//		UINT deActiveParticleCount;
+//		UINT dummy;
+//	};
+//
+//	//定数バッファ
+//	struct CbStart
+//	{
+//		float startIndex;
+//		VECTOR3F startPosition;
+//		float leng;
+//		VECTOR3F sphereRatio;
+//		VECTOR4F color;
+//		float life;
+//		float moveLen;
+//		float randSpeed;
+//		float defSpeed;
+//
+//	};
+//	struct CbStart2
+//	{
+//		float randMoveLength;
+//		float defMoveLength;
+//		float randMoveAngle;
+//		float randScale;
+//		VECTOR3F defVelocity;
+//		float dummy;
+//
+//	};
+//	struct Cb
+//	{
+//		float elapsdTime;
+//		VECTOR3F angleMovement;
+//	};
+//	std::unique_ptr<ConstantBuffer<CbStart>>mCbStart;
+//	std::unique_ptr<ConstantBuffer<CbStart2>>mCbStart2;
+//	std::unique_ptr<ConstantBuffer<Cb>>mCb;
+//	//エディタデータ
+//	struct EditorData
+//	{
+//		VECTOR3F startPosition;
+//		float leng;
+//		VECTOR3F sphereRatio;
+//		VECTOR4F color;
+//		float life;
+//		float moveLen;
+//		float randSpeed;
+//		float defSpeed;
+//		float randMoveLength;
+//		float defMoveLength;
+//		float randMoveAngle;
+//		float randScale;
+//		VECTOR3F defVelocity;
+//		VECTOR3F angleMovement;
+//		UINT textureType;
+//	};
+//	EditorData mEditorData;
+//	//数
+//	float mStartIdex;
+//	//生成数
+//	float particleSize;
+//	//最大数
+//	int mMaxParticle;
+//	float mNewIndex;
+//	//シーンを切り替えるかどうか
+//	bool mSceneChange;
+//	//描画用データ
+//	UINT mRenderCount;
+//	int mIndexNum;
+//
+//};
 #endif

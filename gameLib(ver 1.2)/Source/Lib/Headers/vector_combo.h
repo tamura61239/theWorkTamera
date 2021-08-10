@@ -1,5 +1,6 @@
 #pragma once
 #include<vector>
+#include<string>
 //imgui::combo‚É“n‚·std::vectorŒ^‚Ì”z—ñ
 static auto vector_getter = [](void* vec, int idx, const char** outText)
 {

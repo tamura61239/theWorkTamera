@@ -12,9 +12,9 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wparam
 
 CameraManager::CameraManager(ID3D11Device* device, std::string fileName)
 {
-	mCamera = std::make_shared<Camera>(device);
-	mCameraOperation = std::make_unique<CameraOperation>(mCamera);
-	mCamera->SetPerspective(30 * (3.14f / 180.f), static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT), 0.1f, 1000.0f);
+	mCamera = std::make_unique<Camera>(device);
+	mCameraOperation = std::make_unique<CameraOperation>(mCamera.get());
+	mCamera->SetPerspective(30 * (3.14f / 180.f), static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT), 0.1f, 10000.0f);
 
 }
 
@@ -22,17 +22,20 @@ void CameraManager::Editor()
 {
 #ifdef USE_IMGUI
 	ImGui::Begin("camera");
-	if (ImGui::Button("debug"))
-	{
-		mCameraOperation->SetCameraType(CameraOperation::CAMERA_TYPE::DEBUG);
-	}
+	ImGuiID id = ImGui::GetID((void*)0);
+	mCameraOperation->Editor(&id, 0, 50);
+	ImGui::Text("eye: %.4f,%.4f,%.4f", mCamera->GetEye().x, mCamera->GetEye().y, mCamera->GetEye().z);
+	ImGui::Text("focus: %.4f,%.4f,%.4f", mCamera->GetFocus().x, mCamera->GetFocus().y, mCamera->GetFocus().z);
+	ImGui::Text("up: %.4f,%.4f,%.4f", mCamera->GetUp().x, mCamera->GetUp().y, mCamera->GetUp().z);
+	ImGui::Text("front: %.4f,%.4f,%.4f", mCamera->GetFront().x, mCamera->GetFront().y, mCamera->GetFront().z);
+	ImGui::Text("right: %.4f,%.4f,%.4f", mCamera->GetRight().x, mCamera->GetRight().y, mCamera->GetRight().z);
 	ImGui::End();
 #endif
 }
 
 void CameraManager::Update(float elapsed_time)
 {
-	mCameraOperation->Update(elapsed_time);
+	mCameraOperation->Update(mCamera.get(),elapsed_time);
 	mCamera->CalculateMatrix();
 }
 

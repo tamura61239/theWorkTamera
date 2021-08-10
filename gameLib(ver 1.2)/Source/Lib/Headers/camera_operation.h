@@ -5,9 +5,15 @@
 class CameraOperation
 {
 public:
-	CameraOperation(std::shared_ptr<Camera>camera);
-	void Update(float elapsedTime);
-	void DebugCamera();
+	//コンストラクタ
+	CameraOperation(Camera*camera);
+	//エディタ
+	void Editor(void*id,float x=0,float y=0);
+	//更新
+	void Update(Camera* camera, float elapsedTime);
+	//デバックカメラ
+	void DebugCamera(Camera* camera);
+	//カメラの種類
 	enum CAMERA_TYPE
 	{
 		NORMAL,
@@ -16,11 +22,11 @@ public:
 	//setter
 	void SetCameraType(CAMERA_TYPE type) { mType = type; }
 private:
-	std::shared_ptr<Camera>mCamera;
+	//エディタ変数
 	CAMERA_TYPE mType;
 	//DebugCamera
-	VECTOR2F oldCursor;
-	VECTOR2F newCursor;
-	float distance;
-	VECTOR2F rotate;
+	VECTOR2F mOldCursor;
+	VECTOR2F mNewCursor;
+	float mDistance;
+	VECTOR2F mRotate;
 };

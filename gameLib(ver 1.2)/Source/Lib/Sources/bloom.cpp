@@ -44,17 +44,11 @@ BloomRender::BloomRender(ID3D11Device* device, float screenWidth, float screenHi
 		mCbBluerbuffer = std::make_unique<ConstantBuffer<CbBluer>>(device);
 	}
 	//ファイルからパラメーターを取得
-	for (int i = 0; i < 4; i++)
-	{
-		std::string fileName = "Data/file/bloom" + std::to_string(i) + ".bin";
-
-		FileFunction::Load(mEditorData[i], fileName.c_str(), "rb");
-	}
 	mDepth = std::make_unique<DepthStencilState>(device, false, D3D11_DEPTH_WRITE_MASK_ZERO, D3D11_COMPARISON_ALWAYS);
 	mRasterizer = std::make_unique<RasterizerState>(device, D3D11_FILL_SOLID, D3D11_CULL_BACK);
 	mSampler[0] = std::make_unique<SamplerState>(device, D3D11_FILTER_MIN_MAG_MIP_POINT, D3D11_TEXTURE_ADDRESS_WRAP, D3D11_COMPARISON_ALWAYS, VECTOR4F(0, 0, 0, 0));
 	mSampler[1] = std::make_unique<SamplerState>(device, D3D11_FILTER_ANISOTROPIC, D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_COMPARISON_ALWAYS, VECTOR4F(0, 0, 0, 0));
-
+	FileFunction::Load(mEditorData, "Data/file/bloom.bin", "rb");
 }
 /*****************************************************/
 //　　　　　　　　　　エディタ関数
@@ -72,12 +66,8 @@ void BloomRender::Editor()
 		if (i < 4)ImGui::SameLine();
 	}
 	//どのシーンの時に使うブルームを操作するかを決める
-	ImGui::RadioButton("title bloom", &mNowEditorNo, 0); ImGui::SameLine();
-	ImGui::RadioButton("select bloom", &mNowEditorNo, 1); ImGui::SameLine();
-	ImGui::RadioButton("game bloom", &mNowEditorNo, 2); ImGui::SameLine();
-	ImGui::RadioButton("result bloom", &mNowEditorNo, 3);
 
-	auto& editorData = mEditorData[mNowEditorNo];
+	auto& editorData = mEditorData;
 	//パラメーターを調整する
 	ImGui::RadioButton("blur 01", &editorData.mBlurType, 0); ImGui::SameLine();
 	ImGui::RadioButton("blur 02", &editorData.mBlurType, 1);
@@ -92,17 +82,8 @@ void BloomRender::Editor()
 	{
 		editorData.blurCount = static_cast<float>(blurCount);
 	}
-	std::string fileName = "Data/file/bloom" + std::to_string(mNowEditorNo) + ".bin";
 	//セーブ
-	if (ImGui::Button("save"))FileFunction::Save(editorData, fileName.c_str(),"rb");
-	if (ImGui::Button("all save"))
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			fileName = "Data/file/bloom" + std::to_string(i) + ".bin";
-			FileFunction::Save(mEditorData[i], fileName.c_str(), "wb");
-		}
-	}
+	if (ImGui::Button("save"))FileFunction::Save(editorData, "Data/file/bloom.bin","wb");
 	ImGui::End();
 #endif
 }
@@ -113,7 +94,7 @@ void BloomRender::Editor()
 /*************************ブルームの縮小しつつぼかしたテクスチャの作成******************************/
 void BloomRender::BlurTexture(ID3D11DeviceContext* context, ID3D11ShaderResourceView* colorSrv)
 {
-	auto& editorData = mEditorData[mNowScene];
+	auto& editorData = mEditorData;
 	if (editorData.count <= 0)return;
 	mDepth->Activate(context);
 	mRasterizer->Activate(context);
@@ -155,7 +136,7 @@ void BloomRender::BlurTexture(ID3D11DeviceContext* context, ID3D11ShaderResource
 /********************ブルームをかける********************/
 void BloomRender::Render(ID3D11DeviceContext* context, ID3D11ShaderResourceView* colorSrv)
 {
-	auto& editorData = mEditorData[mNowScene];
+	auto& editorData = mEditorData;
 	if (editorData.count <= 0)return;
 	mDepth->Activate(context);
 	mRasterizer->Activate(context);
@@ -189,7 +170,7 @@ void BloomRender::Render(ID3D11DeviceContext* context, ID3D11ShaderResourceView*
 /**************************ぼかしたテクスチャを作成する方法①********************************/
 void BloomRender::Blur01(ID3D11DeviceContext* context)
 {
-	auto& editorData = mEditorData[mNowScene];
+	auto& editorData = mEditorData;
 
 	mShader[2]->Activate(context);
 
@@ -226,7 +207,7 @@ void BloomRender::Blur01(ID3D11DeviceContext* context)
 
 void BloomRender::Blur02(ID3D11DeviceContext* context)
 {
-	auto& editorData = mEditorData[mNowScene];
+	auto& editorData = mEditorData;
 
 	mShader[3]->Activate(context);
 

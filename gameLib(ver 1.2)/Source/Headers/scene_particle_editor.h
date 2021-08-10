@@ -5,6 +5,7 @@
 #include"sprite.h"
 #include"bloom.h"
 #include"camera_manager.h"
+#include"static_obj.h"
 
 
 class SceneParticleEditor :public Scene
@@ -22,6 +23,8 @@ private:
 	std::unique_ptr<BloomRender>mBloom;
 	std::unique_ptr<Sprite>mSprite;
 	std::unique_ptr<CameraManager>mCameraManager;
+	std::unique_ptr<StaticObj>mObj;
+	std::unique_ptr<MeshRender>mRender;
 	enum EditorName
 	{
 		CAMERA, LIGHT, BLOOM, PARTICLE, MAX

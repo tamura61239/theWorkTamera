@@ -20,7 +20,7 @@ public:
 	CameraOperation* GetCameraOperation() { return mCameraOperation.get(); }
 private:
 	CameraManager(){}
-	std::shared_ptr<Camera>mCamera;
+	std::unique_ptr<Camera>mCamera;
 	std::unique_ptr<CameraOperation>mCameraOperation;
 	float defaultFov = 0;
 	float defaultAspect = 0;

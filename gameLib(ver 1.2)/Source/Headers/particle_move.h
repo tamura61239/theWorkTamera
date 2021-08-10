@@ -10,8 +10,9 @@
 class ParticleMove
 {
 public:
+	ParticleMove() = default;
 	ParticleMove(ID3D11Device* device, std::string fileName = "");
-	virtual void Editor();
+	virtual void Editor(void* id);
 	virtual void Move(ID3D11DeviceContext* context, UINT x);
 	const std::string GetMoveName() { return mName; }
 	const std::string GetFileName() { return mFileName; }

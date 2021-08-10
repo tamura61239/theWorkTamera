@@ -1,10 +1,12 @@
 #include"particle_render.hlsli"
+#include"color_conversion.hlsli"
 
 float4 main(VS_OUT pin) : SV_TARGET
 {
-	if(pin.position.w<=0)
+    float4 color = pin.color;
+    if (color .a<= 0)
     {
         discard;
     }
-	return pin.color;
+    return color;
 }

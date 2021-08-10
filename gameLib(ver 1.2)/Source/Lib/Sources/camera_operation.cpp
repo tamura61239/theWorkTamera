@@ -3,76 +3,100 @@
 #include"key_board.h"
 #ifdef USE_IMGUI
 #include <imgui.h>
-#include <imgui_impl_dx11.h>
-#include <imgui_impl_win32.h>
-#include <imgui_internal.h>
-extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam);
 #endif
+/*****************************************************/
+//　　　　　　　　　　初期化関数(コンストラクタ)
+/*****************************************************/
 
-CameraOperation::CameraOperation(std::shared_ptr<Camera> camera):mType(CAMERA_TYPE::NORMAL)
+CameraOperation::CameraOperation(Camera* camera):mType(CAMERA_TYPE::NORMAL), mOldCursor(0,0),mNewCursor(0,0),mDistance(0)
 {
-	mCamera = camera;
-	VECTOR3F focusF = mCamera->GetFocus();
-	VECTOR3F eyeF = mCamera->GetEye();
+	VECTOR3F focusF = camera->GetFocus();
+	VECTOR3F eyeF = camera->GetEye();
 	VECTOR3F l = focusF - eyeF;
-	distance = sqrtf(l.x * l.x + l.y * l.y + l.z * l.z);
-}
 
-void CameraOperation::Update(float elapsedTime)
+	mDistance = sqrtf(l.x * l.x + l.y * l.y + l.z * l.z);
+
+}
+/*****************************************************/
+//　　　　　　　　　　エディタ関数
+/*****************************************************/
+
+void CameraOperation::Editor(void* id, float x, float y)
+{
+#ifdef USE_IMGUI
+	ImGuiID* imguiId = (ImGuiID*)id;
+	ImGui::BeginChild(*imguiId, ImVec2(x, y), ImGuiWindowFlags_NoTitleBar);
+	if (ImGui::Button("debug"))
+	{
+		mType = CAMERA_TYPE::DEBUG;
+	}
+	ImGui::EndChild();
+#endif
+}
+/*****************************************************/
+//　　　　　　　　　　更新関数
+/*****************************************************/
+
+void CameraOperation::Update(Camera* camera, float elapsedTime)
 {
 	switch (mType)
 	{
 	case CAMERA_TYPE::DEBUG:
-		DebugCamera();
+		DebugCamera(camera);
 		break;
 	}
 }
-
-void CameraOperation::DebugCamera()
+/***************************デバックカメラ************************/
+void CameraOperation::DebugCamera(Camera* camera)
 {
-	VECTOR3F focusF = mCamera->GetFocus();
-	VECTOR3F upF = mCamera->GetUp();
-	VECTOR3F rightF = mCamera->GetRight();
-	VECTOR3F eyeF = mCamera->GetEye();
+	//カメラ情報の取得
+	VECTOR3F focusF = camera->GetFocus();
+	VECTOR3F upF = camera->GetUp();
+	VECTOR3F rightF = camera->GetRight();
+	VECTOR3F eyeF = camera->GetEye();
+	//マウス座標の取得
 	POINT cursor;
 	::GetCursorPos(&cursor);
+	//前のフレームのマウス座標を保存
+	mOldCursor = mNewCursor;
+	//新しいマウス座標をセット
+	mNewCursor = VECTOR2F(static_cast<float>(cursor.x), static_cast<float>(cursor.y));
 
-	oldCursor = newCursor;
-	newCursor = VECTOR2F(static_cast<float>(cursor.x), static_cast<float>(cursor.y));
-
-	float move_x = (newCursor.x - oldCursor.x) * 0.02f;
-	float move_y = (newCursor.y - oldCursor.y) * 0.02f;
+	//移動量を計算
+	float move_x = (mNewCursor.x - mOldCursor.x) * 0.02f;
+	float move_y = (mNewCursor.y - mOldCursor.y) * 0.02f;
 
 	// Altキー
 	if (::GetAsyncKeyState(VK_MENU) & 0x8000)
 	{
+		//左クリック
 		if (::GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 		{
 			// Y軸回転
-			rotate.y += move_x * 0.5f;
-			if (rotate.y > DirectX::XM_PI)
+			mRotate.y += move_x * 0.5f;
+			if (mRotate.y > DirectX::XM_PI)
 			{
-				rotate.y -= DirectX::XM_2PI;
+				mRotate.y -= DirectX::XM_2PI;
 			}
-			else if (rotate.y < -DirectX::XM_PI)
+			else if (mRotate.y < -DirectX::XM_PI)
 			{
-				rotate.y += DirectX::XM_2PI;
+				mRotate.y += DirectX::XM_2PI;
 			}
 			// X軸回転
-			rotate.x += move_y * 0.5f;
-			if (rotate.x > DirectX::XM_PI)
+			mRotate.x += move_y * 0.5f;
+			if (mRotate.x > DirectX::XM_PI)
 			{
-				rotate.x -= DirectX::XM_2PI;
+				mRotate.x -= DirectX::XM_2PI;
 			}
-			else if (rotate.x < -DirectX::XM_PI)
+			else if (mRotate.x < -DirectX::XM_PI)
 			{
-				rotate.x += DirectX::XM_2PI;
+				mRotate.x += DirectX::XM_2PI;
 			}
 		}
 		else if (::GetAsyncKeyState(VK_MBUTTON) & 0x8000)
 		{
 			// 平行移動
-			float s = distance * 0.035f;
+			float s = mDistance * 0.035f;
 			float x = -move_x * s;
 			float y = move_y * s;
 
@@ -84,37 +108,34 @@ void CameraOperation::DebugCamera()
 			focusF.y += upF.y * y;
 			focusF.z += upF.z * y;
 		}
+		//右クリック
 		else if (::GetAsyncKeyState(VK_RBUTTON) & 0x8000)
 		{
 			// ズーム
-			distance += (-move_y - move_x) * distance * 0.1f;
+			mDistance += (-move_y - move_x) * mDistance * 0.1f;
 		}
 
+		//回転をsin,cosする
+		float sx = ::sinf(mRotate.x);
+		float cx = ::cosf(mRotate.x);
+		float sy = ::sinf(mRotate.y);
+		float cy = ::cosf(mRotate.y);
 
-		float sx = ::sinf(rotate.x);
-		float cx = ::cosf(rotate.x);
-		float sy = ::sinf(rotate.y);
-		float cy = ::cosf(rotate.y);
-
+		//計算したsin,cosを使って前ベクトル、右ベクトル、上ベクトルを出す
 		DirectX::XMVECTOR front = DirectX::XMVectorSet(-cx * sy, -sx, -cx * cy, 0.0f);
 		DirectX::XMVECTOR right = DirectX::XMVectorSet(cy, 0, -sy, 0.0f);
 		DirectX::XMVECTOR up = DirectX::XMVector3Cross(right, front);
 
+		//前ベクトルと距離と注視点(focus)を使ってカメラ座標(eye)を求める
 		DirectX::XMVECTOR focus = DirectX::XMLoadFloat3(&focusF);
-		DirectX::XMVECTOR distance = DirectX::XMVectorSet(this->distance, this->distance, this->distance, 0.0f);
-		DirectX::XMVECTOR eye = DirectX::XMVectorSubtract(focus, DirectX::XMVectorMultiply(front, distance));
+		DirectX::XMVECTOR mDistance = DirectX::XMVectorSet(this->mDistance, this->mDistance, this->mDistance, 0.0f);
+		DirectX::XMVECTOR eye = DirectX::XMVectorSubtract(focus, DirectX::XMVectorMultiply(front, mDistance));
 		DirectX::XMStoreFloat3(&eyeF, eye);
 		DirectX::XMStoreFloat3(&upF, up);
-		mCamera->SetEye(eyeF);
-		mCamera->SetFocus(focusF);
-		mCamera->SetUp(upF);
+		//出た値をカメラにセットする
+		camera->SetEye(eyeF);
+		camera->SetFocus(focusF);
+		camera->SetUp(upF);
 	}
-#ifdef USE_IMGUI
-	ImGui::Begin("DebugCamera");
-	ImGui::Text("[eye] x:%f y:%f z:%f", eyeF.x, eyeF.y, eyeF.z);
-	ImGui::Text("[focus] x:%f y:%f z:%f", focusF.x, focusF.y, focusF.z);
-	ImGui::Text("[up] x:%f y:%f z:%f", upF.x, upF.y, upF.z);
-	ImGui::End();
-#endif
 }
 

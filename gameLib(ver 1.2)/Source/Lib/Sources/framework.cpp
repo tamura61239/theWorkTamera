@@ -5,7 +5,6 @@
 #include"camera_manager.h"
 #include"gamepad.h"
 #include<time.h>
-#include"scene_game.h"
 Framework* Framework::mInst = nullptr;
 /*****************************************************/
 //　　　　　　　　　　初期化関数
@@ -126,9 +125,6 @@ bool Framework::Initialize(HWND hwnd)
 	io.Fonts->AddFontFromFileTTF("Data\\ipag.ttf", 17.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
 
 #endif
-	D3D11_VIEWPORT viewport;
-	UINT num_viewports = 1;
-	mDeviceContext.Get()->RSGetViewports(&num_viewports, &viewport);
 	//シーンの初期化
 	pSceneManager.Initialize(mDevice.Get());
 	return true;
