@@ -5,6 +5,8 @@
 #include<string>
 #include"constant_buffer.h"
 #include"drow_shader.h"
+#include"particle_editor.h"
+#include"particle_base.h"
 
 class GpuParticleManager
 {
@@ -35,26 +37,25 @@ private:
 	int particleNimber;
 #elif (PARTICLE_SYSTEM_TYPE==1)
 	void Editor();
-private:
-	void PSSetTexture(ID3D11DeviceContext* context, GpuParticle*particle);
-	std::vector<std::unique_ptr<GpuParticle>>mParticles;
-	//std::unique_ptr<TitleParticle>mTitle;
-	int mParticleNo;
-	bool mEditorFlag;
-	bool mCreateFlag;
-	struct CreateEditorData
+	//パーティクルエディタ関連関数
+	void CreateParticle( int type);
+	void DeleteParticle(int index)
 	{
-		std::string name;
-		int createType;
-		void Reset()
-		{
-			name = "";
-			createType = -1;
-		}
-	};
-	CreateEditorData mCreateEditorData;
+		if (mParticles.size() <= 0)return;
+		assert(index <= mParticles.size());
+		mParticles.erase(mParticles.begin() + index);
+	}
+	~GpuParticleManager()
+	{
+		mParticles.clear();
+	}
+private:
+	std::unique_ptr<ParticleEditor>mEditor;
+	void PSSetTexture(ID3D11DeviceContext* context, int drawType,int texNo);
+	std::vector<std::unique_ptr<ParticleBase>>mParticles;
+	//std::unique_ptr<TitleParticle>mTitle;
 	std::vector<std::string>mTypeNameList;
-	void CreateParticle(std::string name,int type);
+	//void CreateParticle(std::string name,int type);
 	enum DrowType
 	{
 		Point,Board,Tex,Max
@@ -67,11 +68,6 @@ private:
 	};
 	std::unique_ptr<ConstantBuffer<CbTimer>>mCbTimer;
 	std::unique_ptr<DrowShader>mShaders[DrowType::Max];
-	struct TexData
-	{
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>mSRV;
-
-	};
 	std::vector< Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>mTexs;
 #endif
 

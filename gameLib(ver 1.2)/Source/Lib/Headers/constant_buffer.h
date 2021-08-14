@@ -28,7 +28,7 @@ public:
 
 	}
 	//定数バッファをGPU側に送る
-	void Activate(ID3D11DeviceContext* context,UINT slot,bool vs=false,bool ps=false,bool gs=false,bool cs=false)
+	void Activate(ID3D11DeviceContext* context, UINT slot, bool vs = false, bool ps = false, bool gs = false, bool cs = false)
 	{
 		HRESULT hr = S_OK;
 
@@ -39,7 +39,7 @@ public:
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		memcpy_s(mapped_buffer.pData, sizeof(T), &data, sizeof(T));
 		context->Unmap(mConstantBuffer.Get(), 0);
-		
+
 		if (vs)context->VSSetConstantBuffers(slot, 1, mConstantBuffer.GetAddressOf());
 		if (ps)context->PSSetConstantBuffers(slot, 1, mConstantBuffer.GetAddressOf());
 		if (gs)context->GSSetConstantBuffers(slot, 1, mConstantBuffer.GetAddressOf());
@@ -59,6 +59,11 @@ public:
 		if (mSetFlag[2])context->GSSetConstantBuffers(mSlotNum, 1, &buffer);
 		if (mSetFlag[3])context->CSSetConstantBuffers(mSlotNum, 1, &buffer);
 
+	}
+	~ConstantBuffer()
+	{
+		mConstantBuffer.Get()->Release();
+		mConstantBuffer.Reset();
 	}
 private:
 	//定数バッファ

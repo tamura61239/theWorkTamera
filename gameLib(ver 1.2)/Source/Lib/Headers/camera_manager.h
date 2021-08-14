@@ -6,6 +6,7 @@
 class CameraManager
 {
 public:
+	CameraManager() {}
 	CameraManager(ID3D11Device* device, std::string fileName);
 	void Editor();
 	void Update(float elapsed_time);
@@ -19,7 +20,6 @@ public:
 	Camera* GetCamera() { return mCamera.get(); }
 	CameraOperation* GetCameraOperation() { return mCameraOperation.get(); }
 private:
-	CameraManager(){}
 	std::unique_ptr<Camera>mCamera;
 	std::unique_ptr<CameraOperation>mCameraOperation;
 	float defaultFov = 0;

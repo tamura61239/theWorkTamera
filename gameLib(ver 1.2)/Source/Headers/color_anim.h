@@ -4,7 +4,8 @@
 class ColorAnim :public ParticleMove
 {
 public:
-	ColorAnim(ID3D11Device* device, std::string fileName = "");
+	ColorAnim(ID3D11Device* device);
+	void Load(std::string filePas);
 	void Editor(void* id);
 	void Move(ID3D11DeviceContext* context, UINT x);
 private:

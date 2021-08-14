@@ -1,10 +1,14 @@
 #include "particle_move.h"
 #include"shader.h"
+#include"file_function.h"
 #ifdef USE_IMGUI
 #include<imgui.h>
 #endif
+/*****************************************************/
+//　　　　　　　　　　初期化関数(コンストラクタ)
+/*****************************************************/
 
-ParticleMove::ParticleMove(ID3D11Device* device, std::string fileName)
+ParticleMove::ParticleMove(ID3D11Device* device)
 {
 	mCBuffer = std::make_unique<ConstantBuffer<MoveData>>(device);
 	HRESULT hr = S_OK;
@@ -12,8 +16,22 @@ ParticleMove::ParticleMove(ID3D11Device* device, std::string fileName)
 	hr = CreateCSFromCso(device, "Data/shader/particle_basic_move.cso", mShader.GetAddressOf());
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	mName = "basic_move";
-	mFileName = fileName;
+	mFilePas = "";
 }
+/*****************************************************/
+//　　　　　　　　　　ファイル関数
+/*****************************************************/
+
+/**************************ロード関数***************************/
+
+void ParticleMove::Load(std::string filePas)
+{
+	FileFunction::Load(mCBuffer->data, filePas.c_str(), "rb");
+	mFilePas = filePas;
+}
+/*****************************************************/
+//　　　　　　　　　　エディタ関数
+/*****************************************************/
 
 void ParticleMove::Editor(void* id)
 {
@@ -27,9 +45,13 @@ void ParticleMove::Editor(void* id)
 	ImGui::EndChild();
 #endif
 }
+/*****************************************************/
+//　　　　　　　　　　パーティクルの動き関数
+/*****************************************************/
 
 void ParticleMove::Move(ID3D11DeviceContext* context, UINT x)
 {
+	return;
 	mCBuffer->Activate(context, 2, false, false, false, true);
 	context->CSSetShader(mShader.Get(), nullptr, 0);
 

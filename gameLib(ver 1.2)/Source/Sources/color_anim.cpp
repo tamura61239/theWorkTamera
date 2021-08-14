@@ -1,10 +1,14 @@
 #include "..\Headers\color_anim.h"
+#include"file_function.h"
 #include"shader.h"
 #ifdef USE_IMGUI
 #include<imgui.h>
 #endif
+/*****************************************************/
+//　　　　　　　　　　初期化関数(コンストラクタ)
+/*****************************************************/
 
-ColorAnim::ColorAnim(ID3D11Device* device, std::string fileName)
+ColorAnim::ColorAnim(ID3D11Device* device)
 {
 	mCBuffer = std::make_unique<ConstantBuffer<ColorData>>(device);
 	HRESULT hr = S_OK;
@@ -12,9 +16,23 @@ ColorAnim::ColorAnim(ID3D11Device* device, std::string fileName)
 	hr = CreateCSFromCso(device, "Data/shader/particle_basic_move.cso", mShader.GetAddressOf());
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	mName = "color_anim";
-	mFileName = fileName;
+	mFilePas = "";
 
 }
+/*****************************************************/
+//　　　　　　　　　　ファイル関数
+/*****************************************************/
+
+/**************************ロード関数***************************/
+
+void ColorAnim::Load(std::string filePas)
+{
+	FileFunction::Load(mCBuffer->data, filePas.c_str(), "rb");
+	mFilePas = filePas;
+}
+/*****************************************************/
+//　　　　　　　　　　エディタ関数
+/*****************************************************/
 
 void ColorAnim::Editor(void* id)
 {
@@ -31,7 +49,16 @@ void ColorAnim::Editor(void* id)
 #endif
 
 }
+/*****************************************************/
+//　　　　　　　　　　パーティクルの動き関数
+/*****************************************************/
 
 void ColorAnim::Move(ID3D11DeviceContext* context, UINT x)
 {
+	return;
+	context->CSSetShader(mShader.Get(), nullptr, 0);
+	mCBuffer->Activate(context, false, false, false, true);
+	context->Dispatch(x, 1, 1);
+	mCBuffer->DeActivate(context);
+	context->CSSetShader(nullptr, nullptr, 0);
 }

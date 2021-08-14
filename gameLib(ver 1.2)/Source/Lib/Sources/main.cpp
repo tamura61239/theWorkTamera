@@ -23,8 +23,8 @@ INT WINAPI wWinMain(HINSTANCE instance, HINSTANCE prev_instance, LPWSTR cmd_line
 #if defined(DEBUG) | defined(_DEBUG)
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	//メモリーリークがどこで起きてるのかを確認する(今はコメントアウトしている)
-	//_CrtSetBreakAlloc(369);
-	//_CrtSetBreakAlloc(358);
+	//_CrtSetBreakAlloc(14251);
+	//_CrtSetBreakAlloc(14250);
 	//_CrtSetBreakAlloc(356);
 	//_CrtSetBreakAlloc(352);
 	//_CrtSetBreakAlloc(351);

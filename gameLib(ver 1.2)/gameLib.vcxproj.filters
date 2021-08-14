@@ -82,6 +82,24 @@
     <Filter Include="シェーダー\Render\Particle">
       <UniqueIdentifier>{2d11b63b-9bd6-47b3-847b-ec1f5bbd3f79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Particle\Create">
+      <UniqueIdentifier>{e948f048-f693-4ba7-9774-b1b8d9b14b8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Particle\Move">
+      <UniqueIdentifier>{1ed39e1d-3185-451f-9222-299a89e4e54f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Particle\Create">
+      <UniqueIdentifier>{6fb80cd7-b65f-4689-92d3-9e9fa6ab6d64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Particle\Move">
+      <UniqueIdentifier>{eb31e5d1-ce2d-42e3-9bf8-9138b0aa462e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="シェーダー\Compute\GPU">
+      <UniqueIdentifier>{6a97305a-c132-4e80-967f-6cc3c32154d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="シェーダー\Render\GPU">
+      <UniqueIdentifier>{448d71d1-dce4-4eaa-9586-d62c40e744f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External_Libraries\imgui\imgui.cpp">
@@ -222,9 +240,6 @@
     <ClCompile Include="Source\Sources\gpu_noise_geometric_particle.cpp">
       <Filter>ソース ファイル\Gpu</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sources\gpu_particle_manager.cpp">
-      <Filter>ソース ファイル\Gpu</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Sources\gpu_particle_test.cpp">
       <Filter>ソース ファイル\Gpu</Filter>
     </ClCompile>
@@ -252,11 +267,29 @@
     <ClCompile Include="Source\Sources\cs_buffer.cpp">
       <Filter>ソース ファイル\Particle</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sources\color_anim.cpp">
+    <ClCompile Include="Source\Sources\particle_editor.cpp">
       <Filter>ソース ファイル\Particle</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sources\particle_move.cpp">
+    <ClCompile Include="Source\Sources\particle_base.cpp">
       <Filter>ソース ファイル\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sources\color_anim.cpp">
+      <Filter>ソース ファイル\Particle\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sources\particle_move_list.cpp">
+      <Filter>ソース ファイル\Particle\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sources\particle_move.cpp">
+      <Filter>ソース ファイル\Particle\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sources\particle_create_list.cpp">
+      <Filter>ソース ファイル\Particle\Create</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sources\gpu_particle_manager.cpp">
+      <Filter>ソース ファイル\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sources\particle_create_point.cpp">
+      <Filter>ソース ファイル\Particle\Create</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -452,9 +485,6 @@
     <ClInclude Include="Source\Headers\gpu_noise_geometric_particle.h">
       <Filter>ヘッダー ファイル\Gpu</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Headers\gpu_particle_manager.h">
-      <Filter>ヘッダー ファイル\Gpu</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Headers\gpu_particle_test.h">
       <Filter>ヘッダー ファイル\Gpu</Filter>
     </ClInclude>
@@ -469,9 +499,6 @@
     </ClInclude>
     <ClInclude Include="Source\Headers\gpu_swirl_particle.h">
       <Filter>ヘッダー ファイル\Gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Headers\particle_move.h">
-      <Filter>ヘッダー ファイル\Particle</Filter>
     </ClInclude>
     <ClInclude Include="Source\Headers\gpu_wing_particle.h">
       <Filter>ヘッダー ファイル\Gpu</Filter>
@@ -488,34 +515,37 @@
     <ClInclude Include="Source\Headers\cs_buffer.h">
       <Filter>ヘッダー ファイル\Particle</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Headers\color_anim.h">
+    <ClInclude Include="Source\Headers\particle_editor.h">
       <Filter>ヘッダー ファイル\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Headers\particle_base.h">
+      <Filter>ヘッダー ファイル\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Headers\particle_create_base.h">
+      <Filter>ヘッダー ファイル\Particle\Create</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Headers\color_anim.h">
+      <Filter>ヘッダー ファイル\Particle\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Headers\particle_create_list.h">
+      <Filter>ヘッダー ファイル\Particle\Create</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Headers\particle_move.h">
+      <Filter>ヘッダー ファイル\Particle\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Headers\particle_move_list.h">
+      <Filter>ヘッダー ファイル\Particle\Move</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Headers\gpu_particle_manager.h">
+      <Filter>ヘッダー ファイル\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Headers\particle_create_point.h">
+      <Filter>ヘッダー ファイル\Particle\Create</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shader\particle_data.hlsli">
       <Filter>シェーダー\Compute\Particle</Filter>
-    </None>
-    <None Include="Source\Shader\gpu_skinned_mesh_particle.hlsli">
-      <Filter>シェーダー\Compute</Filter>
-    </None>
-    <None Include="Source\Shader\gpu_static_mesh_particle.hlsli">
-      <Filter>シェーダー\Compute</Filter>
-    </None>
-    <None Include="Source\Shader\matrix_calculation.hlsli">
-      <Filter>シェーダー\Compute</Filter>
-    </None>
-    <None Include="Source\Shader\swirl.hlsli">
-      <Filter>シェーダー\Compute</Filter>
-    </None>
-    <None Include="Source\Shader\gpu_cloud_particle_render.hlsli">
-      <Filter>シェーダー\Render</Filter>
-    </None>
-    <None Include="Source\Shader\gpu_noise_geometric.hlsli">
-      <Filter>シェーダー\Render</Filter>
-    </None>
-    <None Include="Source\Shader\gpu_particle_test_render.hlsli">
-      <Filter>シェーダー\Render</Filter>
     </None>
     <None Include="Source\Shader\curl_noise.hlsli">
       <Filter>シェーダー</Filter>
@@ -580,6 +610,27 @@
     <None Include="Source\Lib\Shader\board.hlsli">
       <Filter>gameLib\Shaders</Filter>
     </None>
+    <None Include="Source\Shader\gpu_skinned_mesh_particle.hlsli">
+      <Filter>シェーダー\Compute\GPU</Filter>
+    </None>
+    <None Include="Source\Shader\gpu_static_mesh_particle.hlsli">
+      <Filter>シェーダー\Compute\GPU</Filter>
+    </None>
+    <None Include="Source\Shader\swirl.hlsli">
+      <Filter>シェーダー\Compute\GPU</Filter>
+    </None>
+    <None Include="Source\Shader\gpu_particle_test_render.hlsli">
+      <Filter>シェーダー\Render\GPU</Filter>
+    </None>
+    <None Include="Source\Shader\gpu_noise_geometric.hlsli">
+      <Filter>シェーダー\Render\GPU</Filter>
+    </None>
+    <None Include="Source\Shader\gpu_cloud_particle_render.hlsli">
+      <Filter>シェーダー\Render\GPU</Filter>
+    </None>
+    <None Include="Source\Shader\matrix_calculation.hlsli">
+      <Filter>シェーダー</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Source\Shader\particle_basic_move.hlsl">
@@ -590,72 +641,6 @@
     </FxCompile>
     <FxCompile Include="Source\Shader\particle_last_move.hlsl">
       <Filter>シェーダー\Compute\Particle</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\absorpartion_particle_compute.hlsl">
-      <Filter>シェーダー\Compute</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\cloud_particle_compute.hlsl">
-      <Filter>シェーダー\Compute</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\compute_test.hlsl">
-      <Filter>シェーダー\Compute</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\curl_noise_particle_compute.hlsl">
-      <Filter>シェーダー\Compute</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\gpu_skinned_mesh_create_praticle_cs.hlsl">
-      <Filter>シェーダー\Compute</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\gpu_skinned_mesh_particle_cs.hlsl">
-      <Filter>シェーダー\Compute</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\gpu_static_mesh_create_particle_cs.hlsl">
-      <Filter>シェーダー\Compute</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\gpu_static_mesh_particle_cs.hlsl">
-      <Filter>シェーダー\Compute</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\noise_geometric_particle.hlsl">
-      <Filter>シェーダー\Compute</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\sphere_particle_compute.hlsl">
-      <Filter>シェーダー\Compute</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\swirl_particle_compute.hlsl">
-      <Filter>シェーダー\Compute</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\wing_particle_compute.hlsl">
-      <Filter>シェーダー\Compute</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\gpu_cloud_particle_render_gs.hlsl">
-      <Filter>シェーダー\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\gpu_cloud_particle_render_ps.hlsl">
-      <Filter>シェーダー\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\gpu_clound_particle_render_vs.hlsl">
-      <Filter>シェーダー\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\gpu_curl_noise_particle_render_vs.hlsl">
-      <Filter>シェーダー\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\gpu_noise_geometric_gs.hlsl">
-      <Filter>シェーダー\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\gpu_noise_geometric_ps.hlsl">
-      <Filter>シェーダー\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\gpu_noise_geometric_vs.hlsl">
-      <Filter>シェーダー\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\gpu_particle_test_render_ps.hlsl">
-      <Filter>シェーダー\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\gpu_particle_test_render_vs.hlsl">
-      <Filter>シェーダー\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\gpu_wing_particle_vs.hlsl">
-      <Filter>シェーダー\Render</Filter>
     </FxCompile>
     <FxCompile Include="Source\Shader\point_create_particle.hlsl">
       <Filter>シェーダー\Compute\Particle</Filter>
@@ -773,6 +758,72 @@
     </FxCompile>
     <FxCompile Include="Source\Lib\Shader\motion_blur_ps.hlsl">
       <Filter>gameLib\Shaders\ポストエフェクト</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\absorpartion_particle_compute.hlsl">
+      <Filter>シェーダー\Compute\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\cloud_particle_compute.hlsl">
+      <Filter>シェーダー\Compute\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\curl_noise_particle_compute.hlsl">
+      <Filter>シェーダー\Compute\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\compute_test.hlsl">
+      <Filter>シェーダー\Compute\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\gpu_skinned_mesh_create_praticle_cs.hlsl">
+      <Filter>シェーダー\Compute\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\gpu_skinned_mesh_particle_cs.hlsl">
+      <Filter>シェーダー\Compute\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\gpu_static_mesh_create_particle_cs.hlsl">
+      <Filter>シェーダー\Compute\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\gpu_static_mesh_particle_cs.hlsl">
+      <Filter>シェーダー\Compute\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\noise_geometric_particle.hlsl">
+      <Filter>シェーダー\Compute\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\sphere_particle_compute.hlsl">
+      <Filter>シェーダー\Compute\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\swirl_particle_compute.hlsl">
+      <Filter>シェーダー\Compute\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\wing_particle_compute.hlsl">
+      <Filter>シェーダー\Compute\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\gpu_wing_particle_vs.hlsl">
+      <Filter>シェーダー\Render\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\gpu_particle_test_render_vs.hlsl">
+      <Filter>シェーダー\Render\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\gpu_particle_test_render_ps.hlsl">
+      <Filter>シェーダー\Render\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\gpu_noise_geometric_vs.hlsl">
+      <Filter>シェーダー\Render\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\gpu_noise_geometric_gs.hlsl">
+      <Filter>シェーダー\Render\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\gpu_noise_geometric_ps.hlsl">
+      <Filter>シェーダー\Render\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\gpu_curl_noise_particle_render_vs.hlsl">
+      <Filter>シェーダー\Render\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\gpu_clound_particle_render_vs.hlsl">
+      <Filter>シェーダー\Render\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\gpu_cloud_particle_render_ps.hlsl">
+      <Filter>シェーダー\Render\GPU</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\gpu_cloud_particle_render_gs.hlsl">
+      <Filter>シェーダー\Render\GPU</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

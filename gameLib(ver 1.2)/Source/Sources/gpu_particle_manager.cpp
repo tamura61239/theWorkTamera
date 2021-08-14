@@ -57,7 +57,11 @@ void GpuParticleManager::Render(ID3D11DeviceContext* context, const FLOAT4X4& vi
 
 }
 #elif (PARTICLE_SYSTEM_TYPE==1)
-GpuParticleManager::GpuParticleManager(ID3D11Device* device) :mParticleNo(-1), mEditorFlag(false), mCreateFlag(false)
+/*****************************************************/
+//　　　　　　　　　　初期化関数
+/*****************************************************/
+
+GpuParticleManager::GpuParticleManager(ID3D11Device* device) /*:mParticleNo(-1), mEditorFlag(false), mCreateFlag(false)*/
 {
 	//シェーダー
 	D3D11_INPUT_ELEMENT_DESC input_element_desc[] =
@@ -79,7 +83,7 @@ GpuParticleManager::GpuParticleManager(ID3D11Device* device) :mParticleNo(-1), m
 	//定数バッファ
 	mCbTimer = std::make_unique<ConstantBuffer<CbTimer>>(device);
 	//生成用データのリセット
-	mCreateEditorData.Reset();
+	//mCreateEditorData.Reset();
 	//生成方法を設定
 	mTypeNameList.push_back("one point");
 	//描画に使うテクスチャ生成
@@ -111,8 +115,43 @@ GpuParticleManager::GpuParticleManager(ID3D11Device* device) :mParticleNo(-1), m
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		mTexs.push_back(srv);
 	}
-	//mTitle = std::make_unique<TitleParticle>(device);
+	mEditor = std::make_unique<ParticleEditor>();
 }
+/*****************************************************/
+//　　　　　　　　　　エディタ関数
+/*****************************************************/
+
+void GpuParticleManager::Editor()
+{
+	std::vector<std::string>nameList;
+	for (auto& particle : mParticles)nameList.push_back(particle->GetName());
+	bool create, dead;
+	int type, index;
+	int editType = mEditor->Editor(create, dead, type, index,nameList);
+
+	if (editType == ParticleEditor::EditorType::Operation)
+	{
+		mParticles[index]->Editor(mDrowTypeNames, mTexs);
+		if (dead)DeleteParticle(index);
+	}
+	else
+	{
+		if (create)CreateParticle(type);
+	}
+}
+/**************************パーティクル生成関数***************************/
+void GpuParticleManager::CreateParticle(int type)
+{
+	std::string name;
+	{
+		name = "particle" + std::to_string(mParticles.size());
+	}
+	mParticles.push_back(std::make_unique<ParticleBase>(Framework::Instance().GetDevice().Get(), type, name));
+}
+
+/*****************************************************/
+//　　　　　　　　　　更新関数
+/*****************************************************/
 
 void GpuParticleManager::Update(float elapsd_time)
 {
@@ -121,11 +160,13 @@ void GpuParticleManager::Update(float elapsd_time)
 	mCbTimer->Activate(context, 0, false, false, false, true);
 	for (auto& particle : mParticles)
 	{
-		particle->Update(context,elapsd_time);
+		particle->Update(context, elapsd_time);
 	}
-	//mTitle->Update(elapsd_time, context);
 	mCbTimer->DeActivate(context);
 }
+/*****************************************************/
+//　　　　　　　　　　描画関数
+/*****************************************************/
 
 void GpuParticleManager::Render(ID3D11DeviceContext* context)
 {
@@ -134,8 +175,8 @@ void GpuParticleManager::Render(ID3D11DeviceContext* context)
 		//GPU側にデータを送る
 		auto& shader = mShaders[particle->GetDrowType()];
 		shader->Activate(context);
-		PSSetTexture(context, particle.get());
-		particle->Render(context);
+		PSSetTexture(context, particle->GetDrowType(), particle->GetTexNo());
+		particle->Draw(context);
 		//GPU側に送ったデータを元に戻す
 		shader->Deactivate(context);
 		ID3D11ShaderResourceView* srv = nullptr;
@@ -143,80 +184,16 @@ void GpuParticleManager::Render(ID3D11DeviceContext* context)
 	}
 	//mTitle->Render(context);
 }
-void GpuParticleManager::Editor()
-{
-#ifdef USE_IMGUI
-	std::vector<std::string>nameList;
-	for (auto& particle : mParticles)
-	{
-		nameList.push_back(particle->GetName());
-	}
-	ImGui::Begin("particleEditor");
-	ImGui::Combo("particleName", &mParticleNo, vector_getter, static_cast<void*>(&nameList), nameList.size());
-	ImGui::Checkbox("create", &mCreateFlag);
-	if (mCreateFlag)
-	{
-		char* name = new char[256];
-		std::char_traits<char>::copy(name, mCreateEditorData.name.c_str(), mCreateEditorData.name.size() + 1);
-		ImGui::InputText("name", name, 256);
-		mCreateEditorData.name = name;
-		delete[] name;
-		ImGui::Combo("particleType", &mCreateEditorData.createType, vector_getter, static_cast<void*>(&mTypeNameList), mTypeNameList.size());
-		if (mCreateEditorData.name != "" && mCreateEditorData.createType >= 0)
-		{
-			if (ImGui::Button("create particle"))
-			{
-				mParticleNo = mParticles.size();
-				CreateParticle(mCreateEditorData.name, mCreateEditorData.createType);
-				mCreateEditorData.Reset();
-				mCreateFlag = false;
-			}
-		}
-		ImGui::End();
-		return;
-	}
-	else if (mParticleNo >= 0)
-	{
+/************************テクスチャをGPUに送る関数*****************************/
 
-		ImGui::Checkbox("editor", &mEditorFlag);
-		bool deleteFlag = false;
-		if (ImGui::Button("delete"))
-		{
-			deleteFlag = true;
-			mParticles.erase(mParticles.begin() + mParticleNo);
-		}
-		ImGui::End();
-		if (!mEditorFlag || deleteFlag)return;
-		using std::placeholders::_1;
-		mParticles[mParticleNo]->Editor(mDrowTypeNames,mTexs);
-		return;
-	}
-	ImGui::End();
-	//mTitle->Editor();
-#endif
-}
-
-void GpuParticleManager::PSSetTexture(ID3D11DeviceContext* context, GpuParticle* particle)
+void GpuParticleManager::PSSetTexture(ID3D11DeviceContext* context, int drawType, int texNo)
 {
-	if (particle->GetDrowType() == DrowType::Tex)
+	if (drawType == DrowType::Tex)
 	{
-		context->PSSetShaderResources(0, 1, mTexs[particle->GetTexNo()].GetAddressOf());
+		context->PSSetShaderResources(0, 1, mTexs[texNo].GetAddressOf());
 	}
 }
 
 
-void GpuParticleManager::CreateParticle(std::string name, int type)
-{
-	if (name._Equal(""))
-	{
-		name = "particle" + mParticles.size();
-	}
-	switch (type)
-	{
-	case 0:
-		mParticles.push_back(std::make_unique<GpuParticle>(Framework::Instance().GetDevice().Get(), name));
-		break;
-	}
-}
 
 #endif

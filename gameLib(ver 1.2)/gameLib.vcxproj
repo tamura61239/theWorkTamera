@@ -120,7 +120,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>.\External_Libraries\DirectXTK-master\Inc;.\External_Libraries\FBX SDK\2016.1.2\include;.\External_Libraries\cereal-1.2.2\include;.\Source;%(AdditionalIncludeDirectories);.\Source\Headers;.\Source\Sources;.\Source\Lib\Headers;.\Source\Lib\Sources</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\External_Libraries\DirectXTex;.\External_Libraries\FBX SDK\2016.1.2\include;.\External_Libraries\cereal-1.2.2\include;.\Source;%(AdditionalIncludeDirectories);.\Source\Headers;.\Source\Sources;.\Source\Lib\Headers;.\Source\Lib\Sources</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
@@ -130,8 +130,8 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>dxgi.lib;d3d11.lib;shlwapi.lib;libfbxsdk-mt.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>.\External_Libraries\DirectXTK-master\Bin\Desktop_2015\Win32\Release;.\External_Libraries\FBX SDK\2016.1.2\lib\vs2015\x86\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>dxgi.lib;d3d11.lib;shlwapi.lib;libfbxsdk-mt.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\External_Libraries\FBX SDK\2016.1.2\lib\vs2015\x86\release;.\External_Libraries\DirectXTex\Bin\Desktop_2015\Win32\Release;.\External_Libraries\DirectXTK-master\Bin\Desktop_2015\Win32\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <FxCompile>
@@ -214,7 +214,12 @@
     <ClCompile Include="Source\Sources\gpu_static_mesh_particle.cpp" />
     <ClCompile Include="Source\Sources\gpu_swirl_particle.cpp" />
     <ClCompile Include="Source\Sources\gpu_wing_particle.cpp" />
+    <ClCompile Include="Source\Sources\particle_base.cpp" />
+    <ClCompile Include="Source\Sources\particle_create_list.cpp" />
+    <ClCompile Include="Source\Sources\particle_create_point.cpp" />
+    <ClCompile Include="Source\Sources\particle_editor.cpp" />
     <ClCompile Include="Source\Sources\particle_move.cpp" />
+    <ClCompile Include="Source\Sources\particle_move_list.cpp" />
     <ClCompile Include="Source\Sources\player.cpp" />
     <ClCompile Include="Source\Sources\scene_manager.cpp" />
     <ClCompile Include="Source\Sources\scene_particle_editor.cpp" />
@@ -242,7 +247,13 @@
     <ClInclude Include="Source\Headers\gpu_static_mesh_particle.h" />
     <ClInclude Include="Source\Headers\gpu_swirl_particle.h" />
     <ClInclude Include="Source\Headers\gpu_wing_particle.h" />
+    <ClInclude Include="Source\Headers\particle_base.h" />
+    <ClInclude Include="Source\Headers\particle_create_base.h" />
+    <ClInclude Include="Source\Headers\particle_create_list.h" />
+    <ClInclude Include="Source\Headers\particle_create_point.h" />
+    <ClInclude Include="Source\Headers\particle_editor.h" />
     <ClInclude Include="Source\Headers\particle_move.h" />
+    <ClInclude Include="Source\Headers\particle_move_list.h" />
     <ClInclude Include="Source\Headers\player.h" />
     <ClInclude Include="Source\Headers\scene.h" />
     <ClInclude Include="Source\Headers\scene_manager.h" />
