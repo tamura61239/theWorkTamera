@@ -16,8 +16,7 @@ ParticleBase::ParticleBase(ID3D11Device* device, int createType, std::string nam
 	mMaxParticle = 1000;
 	CreateBuffer(device);
 	mName = name;
-	mCreate = std::make_unique<ParticleCreatePoint>(device);
-	mMoves.emplace_back(ParticleMoveList::CreateParticleMove(0));
+	mCreate.reset(ParticleCreateList::CreateParticleCreate(createType));
 
 	HRESULT hr = S_OK;
 	//シェーダーの生成
